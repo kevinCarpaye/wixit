@@ -1,0 +1,61 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand">Wixit Entreprise</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent" *ngIf="isAuthenticated; then ok else no"></div>
+    <ng-template #ok>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink = "dashboard">Dashboard</a>
+        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="#">Liste</a>
+        </li> -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Articles
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" routerLink = "listArticle">Gestion</a>
+            <a class="dropdown-item" routerLink = "addArticle">Ajouter</a>
+            <!-- <a class="dropdown-item" routerLink = "updateArticle">Modifier/Supprimer</a> -->
+            <!-- <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#"></a> -->
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Promotions
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" routerLink = "listSale">Gestion</a>
+              <a class="dropdown-item" routerLink = "addSale">Ajouter</a>
+              <!-- <a class="dropdown-item" href="#">Modifier/Supprimer</a> -->
+              <!-- <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#"></a> -->
+            </div>
+          </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contacts</a>
+        </li>
+      </ul>
+      <!-- <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form> -->
+      <form class="form-inline my-2 my-lg-0">
+        <a routerLink="connexion" class="btn btn-outline-light text-dark my-2 my-sm-0" (click)="logOut()" >Deconnexion</a>
+      </form>
+    </ng-template>
+    <ng-template #no>
+      <ul class="navbar-nav mr-auto">
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <a routerLink="connexion" class="btn btn-outline-light text-dark my-2 my-sm-0" >Connexion</a>
+      </form>
+    </ng-template>
+  </nav>
+  <router-outlet></router-outlet>
+

@@ -1,0 +1,19 @@
+.text-box {
+    position: absolute;
+    margin-top: 50px;
+    left: 50%;
+    margin-bottom: 500px;
+    transform: translate(-50%, -50%);    
+}
+
+.add-box {
+    position: absolute;
+    margin-top: 150px;
+    width: 50%;
+    left: 50%;  
+    transform: translateX(-50%);
+}
+
+.image-box {
+    justify-items: baseline;;
+}

@@ -1,0 +1,134 @@
+<div class="text-box">
+    <h2 div="title">
+        <span class="title-main">Liste des promotions</span>
+    </h2>
+
+</div>
+<div class="search-box">
+    <!-- <div class="container"> -->
+    <H4 class="text-center" style="margin-bottom: 40px;">Promotions en cours</H4>
+
+    <div class="onoffswitch">
+        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" tabindex="0"
+            [checked]="checked1" (change)="changeTable1()">
+        <label class="onoffswitch-label" for="myonoffswitch">
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
+        </label>
+    </div>
+
+    <div [hidden]="!checked1">
+        <div class="input-search">
+            <h6 class="text-center" style="margin-bottom: 10px;">Slidez "Oui" pour rechercher la promotion en cours d'un article.
+            </h6>
+            <div class="input-switch">
+                <label>Non</label>
+                <label class="switch">
+                    <input type="checkbox" [checked]="checked" (change)="changeInput()">
+                    <span class="slider round"></span>
+                </label>
+                <label>Oui</label>
+            </div>
+            <div class="imput-text" [hidden]="!checked">
+                <input class="form-control" type="text"
+                    style="position: relative; width: 40%; left:50%; transform: translateX(-50%); margin-top:100px;"
+                    name="name" placeholder="Nom de l'article" [(ngModel)]="filteredName">
+            </div>
+        </div>
+        <table class="table" style="margin-top: 50px; margin-bottom: 50px;">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Nom</th>
+                    <th>type</th>
+                    <th>Prix de base</th>
+                    <th>Prix promotion</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of ListSales | searchrticle:filteredName: 'name'"
+                    (click)="click(item.idSale, item.image, item.name, item.type, item.price_base, item.price, item.date_start, item.date_end)">
+                    <td *ngIf="item.image.indexOf('https') == -1 ; then yes else no"></td>
+                <ng-template #yes>
+                    <td><img src="{{BASE_URL}}{{ item.image}}" alt="" style="width: 15vh;"></td>
+                </ng-template>
+                <ng-template #no>
+                    <td><img src="{{item.image}}" alt="" style="width: 15vh;"></td>
+                </ng-template>
+                    <td>{{item.name}}</td>
+                    <td>{{item.type}}</td>
+                    <td>{{item.price_base}}€</td>
+                    <td style="font-size: 25px;">{{item.price}}€</td>
+                    <td>{{item.date_start}}</td>
+                    <td>{{item.date_end}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- </div> -->
+    </div>
+    <br>
+    <hr>
+    <br>
+    <H4 class="text-center" style="margin-bottom: 40px;">Promotions passées</H4>
+    <div class="onoffswitch2">
+        <input type="checkbox" name="onoffswitch2" class="onoffswitch-checkbox2" id="myonoffswitch2" tabindex="1"
+        [checked]="checked2" (change)="changeTable2()">
+        <label class="onoffswitch-label2" for="myonoffswitch2">
+            <span class="onoffswitch-inner2"></span>
+            <span class="onoffswitch-switch2"></span>
+        </label>
+    </div>
+    <div [hidden]="!checked2">
+        <div class="input-search">
+            <h6 class="text-center" style="margin-bottom: 10px;">Slidez "Oui" pour rechercher une promotion en cours.
+            </h6>
+            <div class="input-switch">
+                <label>Non</label>
+                <label class="switch">
+                    <input type="checkbox" [checked]="checked22" (change)="changeInput2()">
+                    <span class="slider round"></span>
+                </label>
+                <label>Oui</label>
+            </div>
+            <div class="imput-text" [hidden]="!checked22">
+                <input class="form-control" type="text"
+                    style="position: relative; width: 40%; left:50%; transform: translateX(-50%); margin-top:100px;"
+                    name="name" placeholder="Nom de l'article"
+                    [(ngModel)]="filteredName">
+            </div>
+        </div>
+        <table class="table" style="margin-top: 50px;">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Nom</th>
+                    <th>type</th>
+                    <th>Prix de base</th>
+                    <th>Prix promotion</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of ListSales2 | searchrticle:filteredName: 'name'" >
+                    <td *ngIf="item.image.indexOf('https') == -1 ; then yes else no"></td>
+                <ng-template #yes>
+                    <td><img src="{{BASE_URL}}{{ item.image}}" alt="" style="width: 15vh;"></td>
+                </ng-template>
+                <ng-template #no>
+                    <td><img src="{{item.image}}" alt="" style="width: 15vh;"></td>
+                </ng-template>
+                    <td>{{item.name}}</td>
+                    <td>{{item.type}}</td>
+                    <td>{{item.price_base}}€</td>
+                    <td style="font-size: 25px;">{{item.price}}€</td>
+                    <td>{{item.date_start}}</td>
+                    <td>{{item.date_end}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- </div> -->
+    </div>
+</div>

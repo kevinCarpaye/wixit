@@ -1,0 +1,107 @@
+<div class="text-box">
+    <h2 div="title">
+        <span class="title-main">Ajouter une promotion</span>
+    </h2>
+</div>
+
+<div class="onoffswitch">
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" tabindex="0"
+        [checked]="checked" (change)="changeTable()">
+    <label class="onoffswitch-label" for="myonoffswitch">
+        <span class="onoffswitch-inner"></span>
+        <span class="onoffswitch-switch"></span>
+    </label>
+</div>
+
+<div class="search-box" [hidden]="!checked">
+    <h5 class="text-center">Taper l'article à promotionner.</h5>
+    <div class="input-search">
+        <div class="imput-text">
+            <input class="form-control" type="text"
+                style="position: relative; width: 40%; left:50%; transform: translateX(-50%); margin-top:30px;"
+                name="name" placeholder="Nom de l'article" [(ngModel)]="filteredName">
+        </div>
+    </div>
+    <table class="table" style="margin-top: 50px;">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Code barre</th>
+                <th>Description</th>
+                <th>type</th>
+                <th>Prix de base</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of ListArticle | searchrticle:filteredName: 'name'"
+                (click)="click(item.idPrice, item.name, item.barcode, item.type, item.price_base, item.stock)">
+                <td><img src="{{BASE_URL}}{{ item.image}}" alt="" style="width: 15vh;"> </td>
+                <td>{{item.name}}</td>
+                <td *ngIf="item.barcode != ''; then thenBlockb else elseBlockb"></td>
+                <ng-template #thenBlockb>
+                    <td>{{item.barcode}}</td>
+                </ng-template>
+                <ng-template #elseBlockb>
+                    <td>N.A</td>
+                </ng-template>
+                <td *ngIf="item.description != ''; then thenBlockd else elseBlockd"></td>
+                <ng-template #thenBlockd>
+                    <td>{{item.description}}</td>
+                </ng-template>
+                <ng-template #elseBlockd>
+                    <td>N.A</td>
+                </ng-template>
+                <td>{{item.type}}</td>
+                <td>{{item.price_base}}€</td>
+                <td *ngIf="item.stock >= 0; then thenBlock else elseBlock"></td>
+                <ng-template #thenBlock>
+                    <td>{{item.stock}}</td>
+                </ng-template>
+                <ng-template #elseBlock>
+                    <td>N.A</td>
+                </ng-template>
+            </tr>
+        </tbody>
+    </table>
+    <!-- </div> -->
+</div>
+<div class="input-text">
+    <form class="form" #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+        <div class="alert alert-danger" style="border-radius: 30px; margin-bottom: 30px;" *ngIf="error">
+            <p style="text-align: center;">{{error}}</p>
+          </div>
+          <div class="alert alert-success" style="border-radius: 30px; margin-bottom: 30px;" *ngIf="message">
+            <p style="text-align: center;">{{message}}</p>
+          </div>
+          <div *ngIf="isLoading" style="text-align: center;">
+            <app-loading-spinner></app-loading-spinner>
+          </div>
+        <div class="form-group">
+            <label for="name">Nom:</label>
+            <input type="text" class="form-control" name="name" [(ngModel)]="name" [disabled]="true">
+        </div>
+        <div class="form-group">
+            <label for="type">Type:</label>
+            <input type="sting" class="form-control" name="type" [(ngModel)]="type" [disabled]="true">
+        </div>
+        <div class="form-group">
+            <label for="price_base">Prix de base:</label>
+            <input type="number" class="form-control" name="price_base" [(ngModel)]="price_base" [disabled]="true">
+        </div>
+        <div class="form-group">
+            <label for="price">Prix promotion:</label>
+            <input type="number" class="form-control" name="price" [(ngModel)]="price" required>
+        </div>
+        <div class="form-group">
+            <label for="stock">Date de début:</label>
+            <input type="date" class="form-control" name="date_start" [(ngModel)]="date_start" required>
+        </div>
+        <div class="form-group">
+            <label for="stock">Date de fin:</label>
+            <input type="date" class="form-control" name="date_end" [(ngModel)]="date_end" required>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!authForm.valid">Ajouter</button>
+    </form>
+</div>

@@ -1,0 +1,76 @@
+<div class="text-box">
+    <h2 div="title">
+        <span class="title-main">Liste des Articles</span>
+    </h2>
+</div>
+<div class="search-box">
+    <!-- <div class="container"> -->
+    <div class="input-search">
+        <h5 class="text-center" style="margin-bottom: 30px;">Slidez "Oui" pour rechercher un article.</h5>
+        <div class="input-switch">
+            <label>Non</label>
+            <label class="switch">
+                <input type="checkbox" [checked]="checked" (change)="changeInput()">
+                <span class="slider round"></span>
+            </label>
+            <label>Oui</label>
+        </div>
+        <div class="imput-text" [hidden]="!checked">
+            <input class="form-control" type="text" style="position: relative; width: 40%; left:50%; transform: translateX(-50%); margin-top:100px;" name="name" placeholder="Nom de l'article" [(ngModel)]="filteredName">
+        </div>
+    </div>
+    <table class="table" style="margin-top: 50px;">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Code barre</th>
+                <th>Description</th>
+                <th>type</th>
+                <th>Prix de base</th>
+                <th>Stock</th>
+                <th>Date de création</th>
+                <th>Date de modification</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of ListArticle | searchrticle:filteredName: 'name'"
+                (click)="click(item.image, item.name, item.barcode, item.description, item.type, item.idPrice, item.price_base, item.stock)">
+                <td *ngIf="item.image.indexOf('https') == -1 ; then yes else no"></td>
+                <ng-template #yes>
+                    <td><img src="{{BASE_URL}}{{ item.image}}" alt="" style="width: 15vh;"></td>
+                </ng-template>
+                <ng-template #no>
+                    <td><img src="{{item.image}}" alt="" style="width: 15vh;"></td>
+                </ng-template>
+                <td>{{item.name}}</td>
+                <td *ngIf="item.barcode != ''; then thenBlockb else elseBlockb"></td>
+                <ng-template #thenBlockb>
+                    <td>{{item.barcode}}</td>
+                </ng-template>
+                <ng-template #elseBlockb>
+                    <td>N.A</td>
+                </ng-template>
+                <td *ngIf="item.description != ''; then thenBlockd else elseBlockd"></td>
+                <ng-template #thenBlockd>
+                    <td>{{item.description}}</td>
+                </ng-template>
+                <ng-template #elseBlockd>
+                    <td>N.A</td>
+                </ng-template>
+                <td>{{item.type}}</td>
+                <td>{{item.price_base}}€</td>
+                <td *ngIf="item.stock >= 0; then thenBlock else elseBlock"></td>
+                <ng-template #thenBlock>
+                    <td>{{item.stock}}</td>
+                </ng-template>
+                <ng-template #elseBlock>
+                    <td>N.A</td>
+                </ng-template>
+                <td>{{item.createdAt}}</td>
+                <td>{{item.updatedAt}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- </div> -->
+</div>

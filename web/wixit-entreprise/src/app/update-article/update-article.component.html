@@ -1,0 +1,54 @@
+<div class="text-box">
+    <h2 div="title">
+      <span class="title-main">Modifier ou supprimer un article</span>
+    </h2>
+  </div>
+  <div class="add-box">
+    <div>
+      <form class="form-signin" #authForm="ngForm">
+        <div class="alert alert-danger" style="border-radius: 30px; margin-bottom: 30px;" *ngIf="error">
+          <p style="text-align: center;">{{error}}</p>
+        </div>
+        <div class="alert alert-success" style="border-radius: 30px; margin-bottom: 30px;" *ngIf="message">
+          <p style="text-align: center;">{{message}}</p>
+        </div>
+        <div *ngIf="isLoading" style="text-align: center;">
+          <app-loading-spinner></app-loading-spinner>
+        </div>
+        <!-- <div class="image-box">
+          <span>Image </span>
+          <input type="file" style="margin-left: 10px;" (change)="fileProgress($event)" enctype="multipart/form-data" required>
+          <div class="file-path-wrapper">
+             <input class="file-path validate" type="text"> gj=;mf==
+          </div>
+        </div> -->
+        <br>
+        <div class="form-group">
+          <label for="name">Nom:</label>
+          <input type="text" class="form-control" name="name" [(ngModel)]="name" [disabled]="true" >
+        </div>
+        <div class="form-group">
+          <label for="barcode">Code Barre:</label>
+          <input type="number" class="form-control" name="barcode" [(ngModel)]="barcode" [disabled]="true">
+        </div>
+        <div class="form-group">
+          <label for="description">Description:</label>
+          <input type="sting" class="form-control" name="description" [(ngModel)]="description" [disabled]="true">
+        </div>
+        <div class="form-group">
+            <label for="type">Type:</label>
+            <input type="sting" class="form-control" name="type" [(ngModel)]="type" [disabled]="true">
+        </div>
+        <div class="form-group">
+          <label for="price_base">Prix de base:</label>
+          <input type="number" class="form-control" name="price_base" [(ngModel)]="price_base" >
+        </div>
+        <div class="form-group">
+          <label for="stock">Stock:</label>
+          <input type="number" class="form-control" name="stock" [(ngModel)]="stock">
+        </div>
+        <button type="submit" class="btn btn-warning" style="margin-right: 30px;" (click)="update(authForm)">Modifier</button>
+        <!-- <button type="submit" class="btn btn-danger" (click)="delete(authForm)">Supprimer</button> -->
+      </form>
+    </div>
+  </div>

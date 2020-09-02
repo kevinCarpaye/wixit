@@ -1,0 +1,36 @@
+
+<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+          <div class="card card-signin my-5">
+            <div class="card-body">
+              <h5 class="card-title text-center">Connexion</h5>
+              <div class="alert alert-danger" style="border-radius: 30px; margin-bottom: 30px;" *ngIf="error">
+                <p style="text-align: center;">{{error}}</p>
+              </div>
+              <div *ngIf="isLoading" style="text-align: center;">
+                <app-loading-spinner></app-loading-spinner>
+              </div>
+              <form class="form-signin" #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">
+                <div class="form-label-group">
+                  <input type="email" name="id" class="form-control" placeholder="Identifiant" ngModel required>
+                  <label for="inputEmail"></label>
+                </div>
+                <div class="form-label-group">
+                  <input type="password" name="password" class="form-control" placeholder="Mot de passe" ngModel required minlength="4">
+                  <label for="inputPassword"></label>
+                </div>
+  
+                <!-- <div class="custom-control custom-checkbox mb-3">
+                  <input type="checkbox" class="custom-control-input" id="customCheck1">
+                  <label class="custom-control-label" for="customCheck1">Se souvenir de moi</label>
+                </div> -->
+                <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit" [disabled]="!authForm.valid">Connexion</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>

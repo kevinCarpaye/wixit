@@ -1,0 +1,55 @@
+<div class="text-box">
+  <h1 div="title">
+    <span class="title-main">Ajouter un article</span>
+  </h1>
+</div>
+<div class="add-box">
+  <div>
+    <form class="form-signin" #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+      <div class="alert alert-danger" style="border-radius: 30px; margin-bottom: 30px;" *ngIf="error">
+        <p style="text-align: center;">{{error}}</p>
+      </div>
+      <div class="alert alert-success" style="border-radius: 30px; margin-bottom: 30px;" *ngIf="message">
+        <p style="text-align: center;">{{message}}</p>
+      </div>
+      <div *ngIf="isLoading" style="text-align: center;">
+        <app-loading-spinner></app-loading-spinner>
+      </div>
+      <div class="image-box">
+        <span>Image </span>
+        <input type="file" style="margin-left: 10px;" (change)="fileProgress($event)" enctype="multipart/form-data" required>
+        <div class="file-path-wrapper">
+          <!-- <input class="file-path validate" type="text"> -->
+        </div>
+      </div>
+      <br>
+      <div class="form-group">
+        <label for="name">Nom:</label>
+        <input type="text" class="form-control" name="name" ngModel  >
+      </div>
+      <div class="form-group">
+        <label for="barcode">Code Barre:</label>
+        <input type="number" class="form-control" name="barcode" ngModel>
+      </div>
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <input type="sting" class="form-control" name="description" ngModel>
+      </div>
+      <div class="form-group">
+        <label for="type" style="margin-right: 10px;" >Type:</label>
+        <select class="selectpicker" name="type" ngModel >
+          <option *ngFor="let item of ListTypes">{{item.type}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="price_base">Prix de base:</label>
+        <input type="number" class="form-control" name="price_base" ngModel >
+      </div>
+      <div class="form-group">
+        <label for="stock">Stock:</label>
+        <input type="number" class="form-control" name="stock" ngModel>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="!authForm.valid">Ajouter</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19B88" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ListeArticle" representedClassName="ListeArticle" syncable="YES" codeGenerationType="class">
+        <attribute name="image" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="price" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="shop" optional="YES" attributeType="String"/>
+        <attribute name="status" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="ProfilPicture" representedClassName="ProfilPicture" syncable="YES" codeGenerationType="class">
+        <attribute name="picture" optional="YES" attributeType="Binary"/>
+    </entity>
+    <entity name="User" representedClassName="User" syncable="YES" codeGenerationType="class">
+        <attribute name="email" optional="YES" attributeType="String"/>
+        <attribute name="picture" optional="YES" attributeType="Binary"/>
+    </entity>
+    <elements>
+        <element name="ListeArticle" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="ProfilPicture" positionX="-63" positionY="27" width="128" height="58"/>
+        <element name="User" positionX="-63" positionY="18" width="128" height="73"/>
+    </elements>
+</model>
