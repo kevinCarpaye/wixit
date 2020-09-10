@@ -410,9 +410,9 @@ extension ListShopController: UITableViewDelegate, UITableViewDataSource {
         self.navigationController?.pushViewController(sdc, animated: true)
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .darkContent
+//    }
     
     struct Connectivity {
       static let sharedInstance = NetworkReachabilityManager()!

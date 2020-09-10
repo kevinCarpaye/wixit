@@ -362,9 +362,9 @@ class ShopController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         return true
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .darkContent
+//    }
 
 }
 

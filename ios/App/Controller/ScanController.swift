@@ -134,7 +134,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         if (captureSession?.isRunning == false) {
             captureSession.startRunning()
         }
-        //self.tabBarController?.tabBar.isHidden = false
+        self.tabBarController?.tabBar.isHidden = true
         //updateUser()
 //        let dfn = (UIImage(named: "promo")?.withRenderingMode(.alwaysOriginal))!
 //        let picture = dfn.jpegData(compressionQuality: 1);
@@ -350,9 +350,9 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         captureSession?.startRunning()
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .darkContent
+//    }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait

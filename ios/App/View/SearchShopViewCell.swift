@@ -89,10 +89,11 @@ class SeachShopHeaderCell: UICollectionViewCell {
     func SetupArticleImage() {
         addSubview(articleImage)
         NSLayoutConstraint.activate([
+            articleImage.topAnchor.constraint(equalTo: divArticle.topAnchor, constant: 20),
             articleImage.bottomAnchor.constraint(equalTo: articleName.topAnchor, constant: -10),
             articleImage.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            articleImage.widthAnchor.constraint(equalToConstant: 250),
-            articleImage.heightAnchor.constraint(equalToConstant: 200)
+            articleImage.widthAnchor.constraint(equalToConstant: 225),
+            articleImage.heightAnchor.constraint(equalToConstant: 180)
         ])
     }
     
@@ -116,7 +117,13 @@ class SearchShopViewCell: UICollectionViewCell {
                     articleSale.image = UIImage(named: "promo")
                     self.ChangeDateStartFormat(date: (shop?.date_start)!)
                     self.ChangeDateEndFormat(date: (shop?.date_end)!)
-                    self.priceArticle.text = "\(shop?.price ?? 0)€"
+                let attributedString = NSMutableAttributedString(string: "\(shop?.price_base ?? 0)€")
+                    attributedString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: NSNumber(value: NSUnderlineStyle.single.rawValue), range: NSMakeRange(0, attributedString.length))
+                    attributedString.addAttribute(NSAttributedString.Key.strikethroughColor, value: UIColor.red, range: NSMakeRange(0, attributedString.length))
+                self.priceArticle.attributedText = attributedString
+                self.priceSaleArticle.text = "/ \((shop?.price)!)€"
+                print("-----------------------------------")
+                print(attributedString)
                 }
             }
 //            else {
@@ -134,16 +141,16 @@ class SearchShopViewCell: UICollectionViewCell {
                 shopDistance.text = "\(String(describing: shop?.distance))m"
             }
             
-            if (shop?.stock) ?? 0 >= 1 {
-                articleStock.text = "\(shop?.stock ?? 0) restants"
-            }
-            if (shop?.stock) ?? 0 <= 1 {
-                articleStock.text = "\(shop?.stock ?? 0) restant"
-            }
+//            if (shop?.stock) ?? 0 >= 1 {
+//                articleStock.text = "\(shop?.stock ?? 0) restants"
+//            }
+//            if (shop?.stock) ?? 0 <= 1 {
+//                articleStock.text = "\(shop?.stock ?? 0) restant"
+//            }
             
-            if (shop?.stock) ?? 0 <= 0 {
-                articleStock.text = "-- restants"
-            }
+//            if (shop?.stock) ?? 0 <= 0 {
+//                articleStock.text = "-- restants"
+//            }
             
             logo.download((Urls().BASE_URL_IMAGE + shop!.image!))
             print(shop?.stock)
@@ -197,6 +204,15 @@ class SearchShopViewCell: UICollectionViewCell {
         return label
     }()
     
+    var priceSaleArticle: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 15)
+        label.textAlignment = .center
+        label.textColor = .black
+        return label
+    }()
+    
     var divSale: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -229,14 +245,14 @@ class SearchShopViewCell: UICollectionViewCell {
         return label
     }()
     
-    var articleStock: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textAlignment = .center
-        label.textColor = .black
-        return label
-    }()
+//    var articleStock: UILabel = {
+//        let label = UILabel()
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        label.font = UIFont.systemFont(ofSize: 14)
+//        label.textAlignment = .center
+//        label.textColor = .black
+//        return label
+//    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -244,14 +260,14 @@ class SearchShopViewCell: UICollectionViewCell {
     }
     
     func SetupViews() {
-        backgroundColor = .yellow
         SetupShopLogo()
         SetupShopName()
         SetupShopAdress()
         SetupShopDistance()
         SetupPrice()
+        SetupSalePrice()
         SetupDivSale()
-        SetupArticleStock()
+//        SetupArticleStock()
     }
     
     func SetupShopLogo() {
@@ -290,14 +306,22 @@ class SearchShopViewCell: UICollectionViewCell {
         addSubview(priceArticle)
         priceArticle.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: 25).isActive = true
         priceArticle.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 10).isActive = true
-        priceArticle.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        priceArticle.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        //priceArticle.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        priceArticle.heightAnchor.constraint(equalToConstant: 40).isActive = true
+    }
+    
+    func SetupSalePrice() {
+        addSubview(priceSaleArticle)
+        priceSaleArticle.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: 25).isActive = true
+        priceSaleArticle.leftAnchor.constraint(equalTo: priceArticle.rightAnchor).isActive = true
+        //priceSaleArticle.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        priceSaleArticle.heightAnchor.constraint(equalToConstant: 40).isActive = true
     }
     
     func SetupDivSale() {
         addSubview(divSale)
         divSale.topAnchor.constraint(equalTo: adressLabel.bottomAnchor, constant: 10).isActive = true
-        divSale.leftAnchor.constraint(equalTo: priceArticle.rightAnchor, constant: 5).isActive = true
+        divSale.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10).isActive = true
         divSale.widthAnchor.constraint(equalToConstant: 180).isActive = true
         divSale.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
@@ -310,7 +334,7 @@ class SearchShopViewCell: UICollectionViewCell {
         articleSale.topAnchor.constraint(equalTo: divSale.topAnchor).isActive = true
         articleSale.leftAnchor.constraint(equalTo: divSale.leftAnchor).isActive = true
         articleSale.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        articleSale.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        articleSale.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
     
     func setupDates() {
@@ -327,13 +351,13 @@ class SearchShopViewCell: UICollectionViewCell {
         date_end.heightAnchor.constraint(equalToConstant: 20).isActive = true
     }
     
-    func SetupArticleStock() {
-        addSubview(articleStock)
-        articleStock.topAnchor.constraint(equalTo: adressLabel.bottomAnchor, constant: 15).isActive = true
-        articleStock.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10).isActive = true
-        articleStock.widthAnchor.constraint(equalToConstant: 90).isActive = true
-        articleStock.heightAnchor.constraint(equalToConstant: 30).isActive = true
-    }
+//    func SetupArticleStock() {
+//        addSubview(articleStock)
+//        articleStock.topAnchor.constraint(equalTo: adressLabel.bottomAnchor, constant: 15).isActive = true
+//        articleStock.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10).isActive = true
+//        articleStock.widthAnchor.constraint(equalToConstant: 90).isActive = true
+//        articleStock.heightAnchor.constraint(equalToConstant: 30).isActive = true
+//    }
     
     func ChangeDateStartFormat(date : String) {
         let formatter = DateFormatter()

@@ -239,7 +239,7 @@ extension ChangePasswordController : UITextFieldDelegate {
         }
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .darkContent
+//    }
 }

@@ -120,7 +120,7 @@ class AuthController: UIViewController {
         self.navigationController?.pushViewController(reg, animated: true)
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .darkContent
+    // }
 }

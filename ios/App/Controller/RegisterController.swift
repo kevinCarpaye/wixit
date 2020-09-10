@@ -10,6 +10,20 @@ import UIKit
 
 class RegisterController: UIViewController {
     
+    var crossView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    var crossIcon : UIImageView = {
+        var image = UIImage(named: "cross")?.withRenderingMode(.alwaysOriginal)
+        var imageView = UIImageView(image: image)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     var messageLabel: UILabel = {
         var label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -134,6 +148,10 @@ class RegisterController: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(HideKeyboard))
         view.addGestureRecognizer(tap)
         
+        let tappedCross = UITapGestureRecognizer(target: self, action: #selector(touchedCross))
+        crossIcon.addGestureRecognizer(tappedCross)
+        crossIcon.isUserInteractionEnabled = true
+        
         UIView.animate(withDuration: 0, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 2, options: .curveEaseOut, animations: {
             self.registerView.transform = CGAffineTransform(scaleX: 1, y: 1)
         }) { (success) in
@@ -161,12 +179,34 @@ class RegisterController: UIViewController {
     }
     
     func SetupObjects () {
+        setupCrossView()
+        setupCrossIcon()
         setupRegisterView()
         SetupButton()
         SetupCpasswordTextfield()
         SetupPasswordTextfield()
         SetupEmailTextField()
         SetupnameTextfield()
+    }
+    
+    func setupCrossView() {
+        view.addSubview(crossView)
+        NSLayoutConstraint.activate([
+            crossView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            crossView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
+            crossView.widthAnchor.constraint(equalToConstant: 45),
+            crossView.heightAnchor.constraint(equalToConstant: 45)
+        ])
+    }
+    
+    func setupCrossIcon() {
+        crossView.addSubview(crossIcon)
+        NSLayoutConstraint.activate([
+            crossIcon.topAnchor.constraint(equalTo: crossView.topAnchor),
+            crossIcon.bottomAnchor.constraint(equalTo: crossView.bottomAnchor),
+            crossIcon.leftAnchor.constraint(equalTo: crossView.leftAnchor),
+            crossIcon.rightAnchor.constraint(equalTo: crossView.rightAnchor)
+        ])
     }
     
     func setupRegisterView () {
@@ -270,6 +310,10 @@ class RegisterController: UIViewController {
             button.heightAnchor.constraint(equalToConstant: 40)
         ])
         button.alpha = 0
+    }
+    
+    @objc func touchedCross() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     func setupMoveLogoAnimation() {
@@ -421,8 +465,8 @@ extension RegisterController: UITextFieldDelegate {
 //        }
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .darkContent
+//    }
 }
 

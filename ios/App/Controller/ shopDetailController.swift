@@ -506,8 +506,8 @@ extension ShopDetailController: MKMapViewDelegate {
         return annotationView
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .darkContent
+//    }
     
 }

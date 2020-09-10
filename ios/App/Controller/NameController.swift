@@ -61,7 +61,7 @@ class NameController: UIViewController, UITextFieldDelegate, CLLocationManagerDe
     override func viewWillAppear(_ animated: Bool) {
         updateUser()
         SetupRightNavButton()
-        self.tabBarController?.tabBar.isHidden = false
+        self.tabBarController?.tabBar.isHidden = true
     }
     
     private func setupViews() {
@@ -258,9 +258,9 @@ class NameController: UIViewController, UITextFieldDelegate, CLLocationManagerDe
     }
     */
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .darkContent
+//    }
 
 }
 

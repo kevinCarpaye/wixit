@@ -474,9 +474,9 @@ extension AddArticleController: UIPickerViewDataSource, UIPickerViewDelegate, UI
         
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .darkContent
+//    }
 }
 
 

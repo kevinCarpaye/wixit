@@ -98,8 +98,8 @@ class MainTabBarController: UITabBarController {
 }
 
 
-extension UINavigationController {
-   open override var preferredStatusBarStyle: UIStatusBarStyle {
-    return topViewController?.preferredStatusBarStyle ?? .darkContent
-   }
-}
+//extension UINavigationController {
+//   open override var preferredStatusBarStyle: UIStatusBarStyle {
+//    return topViewController?.preferredStatusBarStyle ?? .darkContent
+//   }
+//}

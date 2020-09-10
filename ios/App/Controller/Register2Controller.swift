@@ -12,6 +12,20 @@ import SwiftyJSON
 
 class Register2Controller: UIViewController {
     
+    var crossView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    var crossIcon : UIImageView = {
+        var image = UIImage(named: "cross")?.withRenderingMode(.alwaysOriginal)
+        var imageView = UIImageView(image: image)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     let registerView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -88,6 +102,8 @@ class Register2Controller: UIViewController {
     
     func SetupViews() {
         
+        setupCrossView()
+        setupCrossIcon()
         setupRegisterView()
         setupButton()
         SetupCity()
@@ -95,8 +111,30 @@ class Register2Controller: UIViewController {
         SetupProfilPicture()
         SetupProfilLabel()
         
-        
+        let tappedCross = UITapGestureRecognizer(target: self, action: #selector(touchedCross))
+        crossIcon.addGestureRecognizer(tappedCross)
+        crossIcon.isUserInteractionEnabled = true
         self.tabBarController?.tabBar.isHidden = true
+    }
+    
+    func setupCrossView() {
+        view.addSubview(crossView)
+        NSLayoutConstraint.activate([
+            crossView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            crossView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
+            crossView.widthAnchor.constraint(equalToConstant: 45),
+            crossView.heightAnchor.constraint(equalToConstant: 45)
+        ])
+    }
+    
+    func setupCrossIcon() {
+        crossView.addSubview(crossIcon)
+        NSLayoutConstraint.activate([
+            crossIcon.topAnchor.constraint(equalTo: crossView.topAnchor),
+            crossIcon.bottomAnchor.constraint(equalTo: crossView.bottomAnchor),
+            crossIcon.leftAnchor.constraint(equalTo: crossView.leftAnchor),
+            crossIcon.rightAnchor.constraint(equalTo: crossView.rightAnchor)
+        ])
     }
     
     func setupRegisterView () {
@@ -154,6 +192,10 @@ class Register2Controller: UIViewController {
         button.leftAnchor.constraint(equalTo: registerView.leftAnchor, constant: 20).isActive = true
         button.rightAnchor.constraint(equalTo: registerView.rightAnchor, constant: -20).isActive = true
         button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+    }
+    
+    @objc func touchedCross() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     @objc func Register() {
@@ -297,7 +339,7 @@ extension Register2Controller: UIPickerViewDataSource, UIPickerViewDelegate, UII
         
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .darkContent
+//    }
 }

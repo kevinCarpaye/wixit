@@ -84,6 +84,7 @@ class LoginController: UIViewController {
     var moveLogoAnimator : UIViewPropertyAnimator!
     
     override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setToolbarHidden(true, animated: true)
         updatePicture()
     }
 
@@ -410,9 +411,9 @@ extension LoginController: UITextFieldDelegate {
         
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .darkContent
+//    }
     
 }
 

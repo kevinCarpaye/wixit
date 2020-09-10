@@ -506,9 +506,9 @@ class UserInfoController: UIViewController {
         self.navigationController?.pushViewController(UMC, animated: true)
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .darkContent
+//    }
 
 }
 

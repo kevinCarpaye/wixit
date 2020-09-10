@@ -74,6 +74,10 @@ class SearchArticleController: UICollectionViewController, UICollectionViewDeleg
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
     private func setupMessage() {
         view.addSubview(zeroShop)
         NSLayoutConstraint.activate([
@@ -341,9 +345,9 @@ func collectionView(_ collectionView: UICollectionView, layout collectionViewLay
         self.present(alert, animated: true, completion: nil)
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .darkContent
+//    }
     
 
     // MARK: UICollectionViewDelegate

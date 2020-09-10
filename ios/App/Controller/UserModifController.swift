@@ -417,8 +417,8 @@ extension UserModifController: UITextFieldDelegate, UIImagePickerControllerDeleg
         print(dataSelected)
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .darkContent
+//    }
 }
 
