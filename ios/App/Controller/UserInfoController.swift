@@ -494,7 +494,7 @@ class UserInfoController: UIViewController {
     
     @objc func Logout() {
         CoreDataHelper().DeleteUser(user[0])
-        self.navigationController?.pushViewController(ScanController(), animated: true)
+        self.navigationController?.pushViewController(HomeControllerViewController(), animated: true)
     }
     
     @objc func GoToModifController() {

@@ -20,11 +20,10 @@ class RegisterController: UIViewController {
         return label
     }()
     
-    var div: UIView = {
-        let div = UIView()
-        div.translatesAutoresizingMaskIntoConstraints = false
-//        div.backgroundColor = UIColor(displayP3Red: 240/255, green: 240/255, blue: 240/255, alpha: 0.6)
-        return div
+    let registerView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     var nameLabel: UILabel = {
@@ -39,8 +38,11 @@ class RegisterController: UIViewController {
     var nameTextFiel: UITextField = {
          let text = UITextField()
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.layer.borderWidth = 2
+        text.layer.cornerRadius = 5
+        text.layer.borderWidth = 1
         text.layer.borderColor = UIColor.black.cgColor
+        let placeholderText = NSAttributedString(string: " Nom", attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(displayP3Red: 50/255, green: 50/255, blue: 50/255, alpha: 0.3)])
+        text.attributedPlaceholder = placeholderText
         text.textColor = .black
         return text
     }()
@@ -57,8 +59,11 @@ class RegisterController: UIViewController {
     var emailTextfield: UITextField = {
         let text = UITextField()
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.layer.borderWidth = 2
+        text.layer.cornerRadius = 5
+        text.layer.borderWidth = 1
         text.layer.borderColor = UIColor.black.cgColor
+        let placeholderText = NSAttributedString(string: " email", attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(displayP3Red: 50/255, green: 50/255, blue: 50/255, alpha: 0.3)])
+        text.attributedPlaceholder = placeholderText
         text.textColor = .black
         return text
     }()
@@ -76,8 +81,11 @@ class RegisterController: UIViewController {
         let text = UITextField()
         text.translatesAutoresizingMaskIntoConstraints = false
         text.isSecureTextEntry = true
-        text.layer.borderWidth = 2
+        text.layer.cornerRadius = 5
+        text.layer.borderWidth = 1
         text.layer.borderColor = UIColor.black.cgColor
+        let placeholderText = NSAttributedString(string: " Mot de passe", attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(displayP3Red: 50/255, green: 50/255, blue: 50/255, alpha: 0.3)])
+        text.attributedPlaceholder = placeholderText
         text.textColor = .black
         return text
     }()
@@ -95,8 +103,11 @@ class RegisterController: UIViewController {
         let text = UITextField()
         text.translatesAutoresizingMaskIntoConstraints = false
         text.isSecureTextEntry = true
-        text.layer.borderWidth = 2
+        text.layer.cornerRadius = 5
+        text.layer.borderWidth = 1
         text.layer.borderColor = UIColor.black.cgColor
+        let placeholderText = NSAttributedString(string: " Confirmation Mot de passe", attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(displayP3Red: 50/255, green: 50/255, blue: 50/255, alpha: 0.3)])
+        text.attributedPlaceholder = placeholderText
         text.textColor = .black
         return text
     }()
@@ -105,136 +116,196 @@ class RegisterController: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Continuer", for: .normal)
-        button.backgroundColor = .blue
         button.clipsToBounds = true
         button.layer.cornerRadius = 15
         button.backgroundColor = UIColor(displayP3Red: 0, green: 182/255, blue: 1, alpha: 1)
         button.addTarget(self, action: #selector(checkInputs), for: .touchUpInside)
         return button
     }()
+    
+    var moveLogoAnimator : UIViewPropertyAnimator!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 216/255, green: 216/255, blue: 216/255, alpha: 1)
         self.navigationItem.title = "Inscription"
         SetupObjects()
         self.tabBarController?.tabBar.isHidden = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(HideKeyboard))
         view.addGestureRecognizer(tap)
+        
+        UIView.animate(withDuration: 0, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 2, options: .curveEaseOut, animations: {
+            self.registerView.transform = CGAffineTransform(scaleX: 1, y: 1)
+        }) { (success) in
+            self.setupMoveLogoAnimation()
+            self.moveLogoAnimator.startAnimation()
+        }
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        registerView.layer.cornerRadius = CGFloat(7)
+        button.layer.cornerRadius = CGFloat(5)
+        //image.layer.cornerRadius = CGFloat(50)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+//        UIView.animate(withDuration: 0, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 2, options: .curveEaseOut) {
+//            self.registerView.transform = CGAffineTransform(scaleX: 1, y: 1)
+//        } completion: { (success) in
+//            self.setupMoveLogoAnimation()
+//            self.moveLogoAnimator.startAnimation()
+//        }
     }
     
     func SetupObjects () {
-        SetupDiv()
-        SetupMessageLabel()
-        SetupNameLabel()
-        SetupNameTextField()
-        SetupEmailLabel()
-        SetupEmailTextField()
-        SetupPasswordLabel()
-        SetupPasswordTextfield()
-        SetupCpasswordLabel()
-        SetupCpasswordTextfield()
+        setupRegisterView()
         SetupButton()
+        SetupCpasswordTextfield()
+        SetupPasswordTextfield()
+        SetupEmailTextField()
+        SetupnameTextfield()
     }
     
-    func SetupMessageLabel() {
-        view.addSubview(messageLabel)
-        messageLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 5).isActive = true
-        messageLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -5).isActive = true
-        messageLabel.bottomAnchor.constraint(equalTo: div.topAnchor).isActive =  true
-        messageLabel.heightAnchor.constraint(equalToConstant: 40).isActive =  true
+    func setupRegisterView () {
+        view.addSubview(registerView)
+        NSLayoutConstraint.activate([
+            registerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            registerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            registerView.widthAnchor.constraint(equalToConstant: 320),
+            registerView.heightAnchor.constraint(equalToConstant: 450)
+        ])
+        registerView.transform = CGAffineTransform(scaleX: 0, y: 0)
+        registerView.backgroundColor = UIColor(red: 0.29, green: 0.29, blue: 0.29, alpha: 1)
     }
     
-    func SetupDiv() {
-        view.addSubview(div)
-        div.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        div.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        div.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        div.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
-        div.heightAnchor.constraint(equalToConstant: 380).isActive = true
-    }
+//    func SetupMessageLabel() {
+//        view.addSubview(messageLabel)
+//        messageLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 5).isActive = true
+//        messageLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -5).isActive = true
+//        messageLabel.bottomAnchor.constraint(equalTo: div.topAnchor).isActive =  true
+//        messageLabel.heightAnchor.constraint(equalToConstant: 40).isActive =  true
+//    }
     
-    func SetupNameLabel() {
-        div.addSubview(nameLabel)
-        nameLabel.topAnchor.constraint(equalTo: div.topAnchor).isActive = true
-        nameLabel.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        nameLabel.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
-        nameLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
-    }
+//    func SetupNameLabel() {
+//        div.addSubview(nameLabel)
+//        nameLabel.topAnchor.constraint(equalTo: div.topAnchor).isActive = true
+//        nameLabel.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
+//        nameLabel.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
+//        nameLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//    }
     
-    func SetupNameTextField() {
-        div.addSubview(nameTextFiel)
-        nameTextFiel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 5).isActive = true
-        nameTextFiel.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        nameTextFiel.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
+    func SetupnameTextfield() {
+        registerView.addSubview(nameTextFiel)
+        nameTextFiel.bottomAnchor.constraint(equalTo: emailTextfield.topAnchor, constant: -40).isActive = true
+        nameTextFiel.leftAnchor.constraint(equalTo: registerView.leftAnchor, constant: 20).isActive = true
+        nameTextFiel.rightAnchor.constraint(equalTo: registerView.rightAnchor, constant: -20).isActive = true
         nameTextFiel.heightAnchor.constraint(equalToConstant: 40).isActive = true
         nameTextFiel.delegate = self
+        nameTextFiel.alpha = 0
     }
     
-    func SetupEmailLabel() {
-        div.addSubview(emailLabel)
-        emailLabel.topAnchor.constraint(equalTo: nameTextFiel.bottomAnchor, constant: 10).isActive = true
-        emailLabel.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        emailLabel.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
-        emailLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
-    }
+//    func SetupEmailLabel() {
+//        div.addSubview(emailLabel)
+//        emailLabel.topAnchor.constraint(equalTo: nameTextFiel.bottomAnchor, constant: 10).isActive = true
+//        emailLabel.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
+//        emailLabel.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
+//        emailLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//    }
     
     func SetupEmailTextField() {
-        div.addSubview(emailTextfield)
-        emailTextfield.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 5).isActive = true
-        emailTextfield.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        emailTextfield.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
+        registerView.addSubview(emailTextfield)
+        emailTextfield.bottomAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: -40).isActive = true
+        emailTextfield.leftAnchor.constraint(equalTo: registerView.leftAnchor, constant: 20).isActive = true
+        emailTextfield.rightAnchor.constraint(equalTo: registerView.rightAnchor, constant: -20).isActive = true
         emailTextfield.heightAnchor.constraint(equalToConstant: 40).isActive = true
         emailTextfield.delegate = self
+        emailTextfield.alpha = 0
     }
     
-    func SetupPasswordLabel() {
-        div.addSubview(passwordLabel)
-        passwordLabel.topAnchor.constraint(equalTo: emailTextfield.bottomAnchor, constant: 10).isActive = true
-        passwordLabel.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        passwordLabel.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
-        passwordLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
-    }
+//    func SetupPasswordLabel() {
+//        div.addSubview(passwordLabel)
+//        passwordLabel.topAnchor.constraint(equalTo: emailTextfield.bottomAnchor, constant: 10).isActive = true
+//        passwordLabel.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
+//        passwordLabel.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
+//        passwordLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//    }
     
     func SetupPasswordTextfield() {
-        div.addSubview(passwordTextField)
-        passwordTextField.topAnchor.constraint(equalTo: passwordLabel.bottomAnchor, constant: 5).isActive = true
-        passwordTextField.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        passwordTextField.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
+        registerView.addSubview(passwordTextField)
+        passwordTextField.bottomAnchor.constraint(equalTo: CpasswordTextField.topAnchor, constant: -40).isActive = true
+        passwordTextField.leftAnchor.constraint(equalTo: registerView.leftAnchor, constant: 20).isActive = true
+        passwordTextField.rightAnchor.constraint(equalTo: registerView.rightAnchor, constant: -20).isActive = true
         passwordTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
         passwordTextField.delegate = self
+        passwordTextField.alpha = 0
     }
     
-    func SetupCpasswordLabel() {
-        div.addSubview(CpasswordLabel)
-        CpasswordLabel.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 10).isActive = true
-        CpasswordLabel.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        CpasswordLabel.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
-        CpasswordLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
-    }
+//    func SetupCpasswordLabel() {
+//        div.addSubview(CpasswordLabel)
+//        CpasswordLabel.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 10).isActive = true
+//        CpasswordLabel.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
+//        CpasswordLabel.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
+//        CpasswordLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//    }
     
     func SetupCpasswordTextfield() {
-        div.addSubview(CpasswordTextField)
-        CpasswordTextField.topAnchor.constraint(equalTo: CpasswordLabel.bottomAnchor, constant: 5).isActive = true
-        CpasswordTextField.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        CpasswordTextField.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
+        registerView.addSubview(CpasswordTextField)
+        CpasswordTextField.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -40).isActive = true
+        CpasswordTextField.leftAnchor.constraint(equalTo: registerView.leftAnchor, constant: 20).isActive = true
+        CpasswordTextField.rightAnchor.constraint(equalTo: registerView.rightAnchor, constant: -20).isActive = true
         CpasswordTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
         CpasswordTextField.delegate = self
+        CpasswordTextField.alpha = 0
     }
     
     func SetupButton() {
-        view.addSubview(button)
-        button.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 120).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        registerView.addSubview(button)
+        NSLayoutConstraint.activate([
+            button.centerXAnchor.constraint(equalTo: registerView.centerXAnchor),
+            button.bottomAnchor.constraint(equalTo: registerView.bottomAnchor, constant: -50),
+            button.widthAnchor.constraint(equalToConstant: 280),
+            button.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        button.alpha = 0
+    }
+    
+    func setupMoveLogoAnimation() {
+        moveLogoAnimator = UIViewPropertyAnimator(duration: 2.0, curve: .easeIn, animations: nil)
+        moveLogoAnimator.addAnimations({
+            //self.image.frame.origin.y = 20
+            self.registerView.backgroundColor = .white
+        }, delayFactor: 1)
+     
+        moveLogoAnimator.addAnimations({
+            self.nameTextFiel.alpha = 1
+        }, delayFactor: 0.5)
+        
+        moveLogoAnimator.addAnimations({
+            self.emailTextfield.alpha = 1
+        }, delayFactor: 0.6)
+        
+        moveLogoAnimator.addAnimations({
+            self.passwordTextField.alpha = 1
+        }, delayFactor: 0.7)
+        
+        moveLogoAnimator.addAnimations({
+            self.CpasswordTextField.alpha = 1
+        }, delayFactor: 0.8)
+        
+        moveLogoAnimator.addAnimations({
+            self.button.alpha = 1
+        }, delayFactor: 0.9)
     }
     
     @objc func checkInputs() {
         
         guard nameTextFiel.text!.count >= 3 else {
             nameTextFiel.layer.borderColor = UIColor.red.cgColor
-            messageLabel.text = "Le format du nom est incorrect"
+            nameTextFiel.shake()
+            //messageLabel.text = "Le format du nom est incorrect"
             return
         }
         
@@ -242,23 +313,27 @@ class RegisterController: UIViewController {
         
         guard validation == true else {
             emailTextfield.layer.borderColor = UIColor.red.cgColor
-            messageLabel.text = "L'email est incorrect"
+            emailTextfield.shake()
+            //messageLabel.text = "L'email est incorrect"
             return
         }
         
         
         guard passwordTextField.text!.count >= 3 else {
             passwordTextField.layer.borderColor = UIColor.red.cgColor
-            messageLabel.text = "Le mot de passe n'est pas conforme"
+            passwordTextField.shake()
+            //messageLabel.text = "Le mot de passe n'est pas conforme"
             return
         }
         
-        guard CpasswordTextField.text == passwordTextField.text else {
+        print("1")
+        guard CpasswordTextField.text == passwordTextField.text  else {
             CpasswordTextField.layer.borderColor = UIColor.red.cgColor
-            messageLabel.text = "Les mots de passe ne correspondent pas"
+            CpasswordTextField.shake()
+            //messageLabel.text = "Les mots de passe ne correspondent pas"
             return
         }
-
+        print("2")
         Request()
         
     }
@@ -266,13 +341,14 @@ class RegisterController: UIViewController {
     func Request() {
         
         // Fonction pour changer la vue
+        print("3")
         self.messageLabel.text = ""
         let R2C = Register2Controller()
         R2C.name = nameTextFiel.text!
         R2C.email = emailTextfield.text!
         R2C.password = passwordTextField.text!
         R2C.Cpassword = CpasswordTextField.text!
-        self.navigationController?.pushViewController(R2C, animated: true)
+        self.navigationController?.pushViewController(R2C, animated: false)
     }
     
     func isValidEmailAddress(emailAddressString: String) -> Bool {
@@ -298,10 +374,6 @@ class RegisterController: UIViewController {
         return  returnValue
     }
     
-    @objc func buttonClicked() {
-        print("Le boutton à été enfoncé")
-    }
-    
     @objc func HideKeyboard() {
         view.endEditing(true)
     }
@@ -311,50 +383,42 @@ class RegisterController: UIViewController {
 extension RegisterController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        if nameTextFiel.text!.count < 3 {
-            nameTextFiel.layer.borderColor = UIColor.red.cgColor
-        }
-        else {
-            nameTextFiel.layer.borderColor = UIColor.green.cgColor
-        }
-        
-        if passwordTextField.text!.count < 3 {
-            passwordTextField.layer.borderColor = UIColor.red.cgColor
-        }
-        else {
-            passwordTextField.layer.borderColor = UIColor.green.cgColor
-        }
+
+        nameTextFiel.layer.borderColor = UIColor.black.cgColor
+        emailTextfield.layer.borderColor = UIColor.black.cgColor
+        passwordTextField.layer.borderColor = UIColor.black.cgColor
+        CpasswordTextField.layer.borderColor = UIColor.black.cgColor
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if nameTextFiel.text!.count < 3 {
-            nameTextFiel.layer.borderColor = UIColor.red.cgColor
-        }
-        else {
-            nameTextFiel.layer.borderColor = UIColor.green.cgColor
-        }
-        
-        let validate = isValidEmailAddress(emailAddressString: emailTextfield.text!)
-        if validate != true {
-            emailTextfield.layer.borderColor = UIColor.red.cgColor
-        }
-        else {
-            emailTextfield.layer.borderColor = UIColor.green.cgColor
-        }
-        
-        if passwordTextField.text!.count < 3 {
-            passwordTextField.layer.borderColor = UIColor.red.cgColor
-        }
-        else {
-            passwordTextField.layer.borderColor = UIColor.green.cgColor
-        }
-        
-        if CpasswordTextField.text != passwordTextField.text {
-            CpasswordTextField.layer.borderColor = UIColor.red.cgColor
-        }
-        else {
-            CpasswordTextField.layer.borderColor = UIColor.green.cgColor
-        }
+//        if nameTextFiel.text!.count < 3 {
+//            nameTextFiel.layer.borderColor = UIColor.red.cgColor
+//        }
+//        else {
+//            nameTextFiel.layer.borderColor = UIColor.green.cgColor
+//        }
+//
+//        let validate = isValidEmailAddress(emailAddressString: emailTextfield.text!)
+//        if validate != true {
+//            emailTextfield.layer.borderColor = UIColor.red.cgColor
+//        }
+//        else {
+//            emailTextfield.layer.borderColor = UIColor.green.cgColor
+//        }
+//
+//        if passwordTextField.text!.count < 3 {
+//            passwordTextField.layer.borderColor = UIColor.red.cgColor
+//        }
+//        else {
+//            passwordTextField.layer.borderColor = UIColor.green.cgColor
+//        }
+//
+//        if CpasswordTextField.text != passwordTextField.text {
+//            CpasswordTextField.layer.borderColor = UIColor.red.cgColor
+//        }
+//        else {
+//            CpasswordTextField.layer.borderColor = UIColor.green.cgColor
+//        }
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {

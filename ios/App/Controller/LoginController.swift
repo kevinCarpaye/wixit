@@ -16,72 +16,72 @@ class LoginController: UIViewController {
     var picture: [ProfilPicture] = []
     var pic: Data? = nil
     
-    
-    var div: UIView = {
-        let div = UIView()
-        div.translatesAutoresizingMaskIntoConstraints = false
-        //div.backgroundColor = UIColor(displayP3Red: 150/255, green: 150/255, blue: 150/255, alpha: 0.2)
-        return div
+    var crossView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
-    var messageLabel: UILabel = {
-        var label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = .red
-        label.textAlignment = .center
-        label.textColor = .red
-        return label
+    var crossIcon : UIImageView = {
+        var image = UIImage(named: "cross")?.withRenderingMode(.alwaysOriginal)
+        var imageView = UIImageView(image: image)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
     
-    var userNameLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.text = "Identifiant"
-        label.textColor = .black
-        return label
+    let loginView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
-    var userNameTextField: UITextField = {
+    lazy var image : UIImageView = {
+        let image = UIImage(named: "user")?.withRenderingMode(.alwaysOriginal)
+        let imageview = UIImageView(image: image)
+        imageview.contentMode = .scaleAspectFit
+        imageview.translatesAutoresizingMaskIntoConstraints = false
+        imageview.layer.masksToBounds = true
+        return imageview
+    }()
+    
+    let usernameTextfield : UITextField = {
+        let text = UITextField()
+        text.translatesAutoresizingMaskIntoConstraints = false
+        text.layer.borderWidth = 1
+        text.layer.borderColor = UIColor.black.cgColor
+        text.layer.cornerRadius = 5
+        let placeholderText = NSAttributedString(string: " Email", attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(displayP3Red: 50/255, green: 50/255, blue: 50/255, alpha: 0.3)])
+        text.attributedPlaceholder = placeholderText
+        text.textColor = .black
+        return text
+    }()
+    
+    var passwordTextfield: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-//        textField.layer.borderWidth = 2
-//        textField.layer.borderColor = UIColor.black.cgColor
-//        textField.textColor = .black
-        return textField
-    }()
-    
-    var userPasswordLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.text = "Mot de passe"
-        label.textColor = .black
-        return label
-    }()
-    
-    var userPasswordTextField: UITextField = {
-        let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.isSecureTextEntry = true
-        textField.layer.borderWidth = 2
+        textField.layer.borderWidth = 1
         textField.layer.borderColor = UIColor.black.cgColor
+        textField.layer.cornerRadius = 5
+        let placeholderText = NSAttributedString(string: " Mot de passe", attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(displayP3Red: 50/255, green: 50/255, blue: 50/255, alpha: 0.3)])
+        textField.attributedPlaceholder = placeholderText
         textField.textColor = .black
+        textField.isSecureTextEntry = true
         return textField
     }()
     
-    var button: UIButton = {
+    var loginButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Connexion", for: .normal)
-        button.backgroundColor = .blue
         button.clipsToBounds = true
         button.layer.cornerRadius = 15
         button.backgroundColor = UIColor(displayP3Red: 0, green: 182/255, blue: 1, alpha: 1)
         button.addTarget(self, action: #selector(checkInputs), for: .touchUpInside)
         return button
     }()
+    
+    var moveLogoAnimator : UIViewPropertyAnimator!
     
     override func viewWillAppear(_ animated: Bool) {
         updatePicture()
@@ -90,80 +90,151 @@ class LoginController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 216/255, green: 216/255, blue: 216/255, alpha: 1)
         self.navigationItem.title = "Se connecter"
-        
-        SetupDiv()
-        
-        SetupMessageLabel()
-        SetupUsernameLabel()
-        SetupUsernameTextField()
-        SetupUserPasswordLabel()
-        SetupUserPasswordTextfield()
-        setupButton()
+        setupCrossView()
+        setupCrossIcon()
+        setupLoginView()
+        setupImage()
+        setupLoginButton()
+        setupPasswordTextfield()
+        setupUsernameTextfield()
+    
         self.tabBarController?.tabBar.isHidden = true
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(HideKeyboard))
         view.addGestureRecognizer(tap)
+        
+        let tapCross = UITapGestureRecognizer(target: self, action: #selector(touchedCross))
+        crossIcon.addGestureRecognizer(tapCross)
+        crossIcon.isUserInteractionEnabled = true
+        
+//        UIView.animate(withDuration: 0, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 2, options: .curveEaseOut) {
+//            self.loginView.transform = CGAffineTransform(scaleX: 1, y: 1)
+//        } completion: { (success) in
+//            self.setupMoveLogoAnimation()
+//            self.moveLogoAnimator.startAnimation()
+//        }
+        
+        UIView.animate(withDuration: 0, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 2, options: .curveEaseOut, animations: {
+            self.loginView.transform = CGAffineTransform(scaleX: 1, y: 1)
+        }) { (success) in
+            self.setupMoveLogoAnimation()
+            self.moveLogoAnimator.startAnimation()
+        }
     }
     
-    func SetupDiv () {
-        view.addSubview(div)
-        div.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        div.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        div.widthAnchor.constraint(equalToConstant: 300).isActive = true
-        div.heightAnchor.constraint(equalToConstant: 250).isActive = true
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        loginView.layer.cornerRadius = CGFloat(7)
+        loginButton.layer.cornerRadius = CGFloat(5)
+        image.layer.cornerRadius = CGFloat(50)
     }
     
-    func SetupMessageLabel() {
-        view.addSubview(messageLabel)
-        messageLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 5).isActive = true
-        messageLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -5).isActive = true
-        messageLabel.bottomAnchor.constraint(equalTo: div.topAnchor, constant: -10).isActive =  true
-        messageLabel.heightAnchor.constraint(equalToConstant: 40).isActive =  true
+    override func viewDidAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
-    func SetupUsernameLabel() {
-        div.addSubview(userNameLabel)
-        userNameLabel.topAnchor.constraint(equalTo: div.topAnchor, constant: 20).isActive = true
-        userNameLabel.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        userNameLabel.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
-        userNameLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+    func setupCrossView() {
+        view.addSubview(crossView)
+        NSLayoutConstraint.activate([
+            crossView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            crossView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
+            crossView.widthAnchor.constraint(equalToConstant: 45),
+            crossView.heightAnchor.constraint(equalToConstant: 45)
+        ])
     }
     
-    func SetupUsernameTextField() {
-        div.addSubview(userNameTextField)
-        userNameTextField.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: 5).isActive = true
-        userNameTextField.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        userNameTextField.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
-        userNameTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        userNameTextField.delegate = self
-        userNameTextField.underlined()
+    func setupCrossIcon() {
+        crossView.addSubview(crossIcon)
+        NSLayoutConstraint.activate([
+            crossIcon.topAnchor.constraint(equalTo: crossView.topAnchor),
+            crossIcon.bottomAnchor.constraint(equalTo: crossView.bottomAnchor),
+            crossIcon.leftAnchor.constraint(equalTo: crossView.leftAnchor),
+            crossIcon.rightAnchor.constraint(equalTo: crossView.rightAnchor)
+        ])
     }
     
-    func SetupUserPasswordLabel() {
-        div.addSubview(userPasswordLabel)
-        userPasswordLabel.topAnchor.constraint(equalTo: userNameTextField.bottomAnchor, constant: 20).isActive = true
-        userPasswordLabel.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        userPasswordLabel.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
-        userPasswordLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+    func setupLoginView () {
+        view.addSubview(loginView)
+        NSLayoutConstraint.activate([
+            loginView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loginView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            loginView.widthAnchor.constraint(equalToConstant: 320),
+            loginView.heightAnchor.constraint(equalToConstant: 420)
+        ])
+        loginView.transform = CGAffineTransform(scaleX: 0, y: 0)
+        loginView.backgroundColor = UIColor(red: 0.29, green: 0.29, blue: 0.29, alpha: 1)
     }
     
-    func SetupUserPasswordTextfield() {
-        div.addSubview(userPasswordTextField)
-        userPasswordTextField.topAnchor.constraint(equalTo: userPasswordLabel.bottomAnchor, constant:5).isActive = true
-        userPasswordTextField.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        userPasswordTextField.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
-        userPasswordTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        userPasswordTextField.delegate = self
+    func setupImage() {
+        loginView.addSubview(image)
+        NSLayoutConstraint.activate([
+            image.centerXAnchor.constraint(equalTo: loginView.centerXAnchor),
+            image.centerYAnchor.constraint(equalTo: loginView.centerYAnchor),
+            image.heightAnchor.constraint(equalToConstant: 100),
+            image.widthAnchor.constraint(equalToConstant: 100)
+        ])
     }
     
-    func setupButton() {
-        view.addSubview(button)
-        button.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 120).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+    func setupUsernameTextfield() {
+        loginView.addSubview(usernameTextfield)
+        NSLayoutConstraint.activate([
+            usernameTextfield.bottomAnchor.constraint(equalTo: passwordTextfield.topAnchor, constant: -40),
+            usernameTextfield.leftAnchor.constraint(equalTo: loginView.leftAnchor, constant: 20),
+            usernameTextfield.rightAnchor.constraint(equalTo: loginView.rightAnchor, constant: -20),
+            usernameTextfield.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        usernameTextfield.alpha = 0
+        usernameTextfield.delegate = self
+    }
+    
+    func setupPasswordTextfield() {
+        loginView.addSubview(passwordTextfield)
+        NSLayoutConstraint.activate([
+            passwordTextfield.bottomAnchor.constraint(equalTo: loginButton.topAnchor,constant: -40 ),
+            passwordTextfield.leftAnchor.constraint(equalTo: loginView.leftAnchor, constant: 20),
+            passwordTextfield.rightAnchor.constraint(equalTo: loginView.rightAnchor, constant: -20),
+            passwordTextfield.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        passwordTextfield.alpha = 0
+        passwordTextfield.delegate = self
+    }
+    
+    func setupLoginButton() {
+        loginView.addSubview(loginButton)
+        NSLayoutConstraint.activate([
+            loginButton.centerXAnchor.constraint(equalTo: loginView.centerXAnchor),
+            loginButton.bottomAnchor.constraint(equalTo: loginView.bottomAnchor, constant: -50),
+            loginButton.widthAnchor.constraint(equalToConstant: 280),
+            loginButton.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        loginButton.alpha = 0
+    }
+    
+    func setupMoveLogoAnimation() {
+        moveLogoAnimator = UIViewPropertyAnimator(duration: 2.0, curve: .easeIn, animations: nil)
+        moveLogoAnimator.addAnimations({
+            self.image.frame.origin.y = 20
+            self.loginView.backgroundColor = .white
+        }, delayFactor: 0.2)
+     
+        moveLogoAnimator.addAnimations({
+            self.usernameTextfield.alpha = 1
+        }, delayFactor: 0.5)
+        
+        moveLogoAnimator.addAnimations({
+            self.passwordTextfield.alpha = 1
+        }, delayFactor: 0.7)
+        
+        moveLogoAnimator.addAnimations({
+            self.loginButton.alpha = 1
+        }, delayFactor: 0.9)
+    }
+    
+    @objc func touchedCross() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     func updatePicture() {
@@ -207,16 +278,16 @@ class LoginController: UIViewController {
     
     @objc func checkInputs() {
         
-        let validation = isValidEmailAddress(emailAddressString: userNameTextField.text!)
+        let validation = isValidEmailAddress(emailAddressString: usernameTextfield.text!)
         
         guard validation == true else {
-            userNameTextField.layer.borderColor = UIColor.red.cgColor
-            messageLabel.text = "L'email est incorrect"
+            usernameTextfield.shake()
+            //messageLabel.text = "L'email est incorrect"
             return
         }
         
-        guard userPasswordTextField.text!.count > 3 else {
-            userPasswordTextField.layer.borderColor = UIColor.red.cgColor
+        guard passwordTextfield.text!.count > 3 else {
+            passwordTextfield.shake()
             return
         }
         
@@ -246,7 +317,7 @@ class LoginController: UIViewController {
 //        }
         
         let url: String = Urls().BASE_URL + "/login"
-        let parameters: [String: String] = ["email": userNameTextField.text!, "password": userPasswordTextField.text!]
+        let parameters: [String: String] = ["email": usernameTextfield.text!, "password": passwordTextfield.text!]
         
         AF.request(url, method: .get, parameters: parameters, headers: nil).responseJSON { (response) in
             switch response.result {
@@ -255,29 +326,28 @@ class LoginController: UIViewController {
                     do {
                         let responseDecoded = try JSONDecoder().decode(UserLoginStruct.self, from: data)
                         if responseDecoded.request == 1 {
-                            if self.messageLabel.text != "" {
-                                self.messageLabel.text = ""
-                            }
+                            //if self.messageLabel.text != "" {
+                                //self.messageLabel.text = ""
+                            //}
 //                            let dfn = (UIImage(named: "promo")?.withRenderingMode(.alwaysOriginal))!
 //                            let picture = dfn.jpegData(compressionQuality: 1);
                             
                             if self.pic != nil {
-                                CoreDataHelper().saveUser(self.userNameTextField.text!, image: self.pic)
+                                CoreDataHelper().saveUser(self.usernameTextfield.text!, image: self.pic)
                             }
                             else {
                                 let image = UIImage(named: "noPicture")?.withRenderingMode(.alwaysOriginal)
                                 let pic = image?.pngData()
-                                CoreDataHelper().saveUser(self.userNameTextField.text!, image: pic)
+                                CoreDataHelper().saveUser(self.usernameTextfield.text!, image: pic)
                                 if self.picture.count > 0 {
                                 CoreDataHelper().DeletePicture(self.picture[0])
                                 }
                             }
                         
-                            self.navigationController?.pushViewController(ScanController(), animated: true)
-                            print("ghjklmù")
+                            self.navigationController?.pushViewController(HomeControllerViewController(), animated: true)
                         }
                         else {
-                            self.messageLabel.text = responseDecoded.result
+                            Alert().displayAlert(controller: self, title: "", message: responseDecoded.result)
                         }
                         
                         print(responseDecoded.result)
@@ -301,46 +371,42 @@ class LoginController: UIViewController {
 extension LoginController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        if userNameTextField.text!.count < 3 {
-            userNameTextField.layer.borderColor = UIColor.red.cgColor
-        }
-
-        else {
-            userNameTextField.layer.borderColor = UIColor.green.cgColor
-        }
-
-        if userPasswordTextField.text!.count < 3 {
-            userPasswordTextField.layer.borderColor = UIColor.red.cgColor
-        }
-        else {
-            userPasswordTextField.layer.borderColor = UIColor.green.cgColor
-        }
+//        if usernameTextfield.text!.count < 3 {
+//            usernameTextfield.layer.borderColor = UIColor.red.cgColor
+//        }
+//
+//        if passwordTextfield.text!.count < 3 {
+//            passwordTextfield.layer.borderColor = UIColor.red.cgColor
+//        }
+        
+        usernameTextfield.layer.borderColor = UIColor.black.cgColor
+        passwordTextfield.layer.borderColor = UIColor.black.cgColor
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if userNameTextField.text!.count < 3 {
-            userNameTextField.layer.borderColor = UIColor.red.cgColor
-        }
-
-        else {
-            userNameTextField.layer.borderColor = UIColor.green.cgColor
-        }
-        
-        let validate = isValidEmailAddress(emailAddressString: userNameTextField.text!)
-        if validate != true {
-            userNameTextField.layer.borderColor = UIColor.red.cgColor
-        }
-        else {
-            userNameTextField.layer.borderColor = UIColor.green.cgColor
-        }
-
-        if userPasswordTextField.text!.count < 3 {
-            userPasswordTextField.layer.borderColor = UIColor.red.cgColor
-        }
-
-        else  {
-            userPasswordTextField.layer.borderColor = UIColor.green.cgColor
-        }
+//        if usernameTextfield.text!.count < 3 {
+//            usernameTextfield.layer.borderColor = UIColor.red.cgColor
+//        }
+//
+//        else {
+//            usernameTextfield.layer.borderColor = UIColor.green.cgColor
+//        }
+//
+//        let validate = isValidEmailAddress(emailAddressString: usernameTextfield.text!)
+//        if validate != true {
+//            usernameTextfield.layer.borderColor = UIColor.red.cgColor
+//        }
+//        else {
+//            usernameTextfield.layer.borderColor = UIColor.green.cgColor
+//        }
+//
+//        if passwordTextfield.text!.count < 3 {
+//            passwordTextfield.layer.borderColor = UIColor.red.cgColor
+//        }
+//
+//        else  {
+//            passwordTextfield.layer.borderColor = UIColor.green.cgColor
+//        }
         
     }
     

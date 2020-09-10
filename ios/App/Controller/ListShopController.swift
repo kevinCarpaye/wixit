@@ -18,7 +18,7 @@ class ListShopController: UIViewController, UITextFieldDelegate, CLLocationManag
     
     var shop: [SearchShop] = []
     var user: [User] = []
-    
+    var isLogged : Bool = false
     
     var locationManager = CLLocationManager()
     var currentLocation: CLLocation? = nil
@@ -121,16 +121,24 @@ class ListShopController: UIViewController, UITextFieldDelegate, CLLocationManag
     }
     
     @objc private func test() {
-        let im = UIImage(named: "user")?.withRenderingMode(.alwaysOriginal)
-        if (profilPicture.imageView?.image?.isEqual(im))! {
-            print("identique")
-            let AC = AuthController()
-            self.navigationController?.pushViewController(AC, animated: true)
-        }
-        else {
-            print("diiférent")
+//        let im = UIImage(named: "user")?.withRenderingMode(.alwaysOriginal)
+//        if (profilPicture.imageView?.image?.isEqual(im))! {
+//            print("identique")
+//            let AC = AuthController()
+//            self.navigationController?.pushViewController(AC, animated: true)
+//        }
+//        else {
+//            print("diiférent")
+//            let UIC = UserInfoController()
+//            self.navigationController?.pushViewController(UIC, animated: true)
+//        }
+        if self.isLogged == true {
             let UIC = UserInfoController()
             self.navigationController?.pushViewController(UIC, animated: true)
+        }
+        else {
+            let AC = AuthController()
+            self.navigationController?.pushViewController(AC, animated: true)
         }
     }
     

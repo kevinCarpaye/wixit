@@ -21,7 +21,7 @@ class SeachShopHeaderCell: UICollectionViewCell {
            var image = UIImage(named: "")?.withRenderingMode(.alwaysOriginal)
            var view = UIImageView(image: image)
            view.translatesAutoresizingMaskIntoConstraints = false
-           view.contentMode = .scaleAspectFit
+           view.contentMode = .scaleToFill
            return view
        }()
        
@@ -91,8 +91,8 @@ class SeachShopHeaderCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             articleImage.bottomAnchor.constraint(equalTo: articleName.topAnchor, constant: -10),
             articleImage.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            articleImage.widthAnchor.constraint(equalToConstant: 160),
-            articleImage.heightAnchor.constraint(equalToConstant: 160)
+            articleImage.widthAnchor.constraint(equalToConstant: 250),
+            articleImage.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
     

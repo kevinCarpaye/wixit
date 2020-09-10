@@ -32,4 +32,20 @@ extension UITextField {
         self.layer.addSublayer(border)
         self.layer.masksToBounds = true
     }
+    
+    func shake() {
+        self.layer.borderColor = UIColor.red.cgColor
+        
+        let shakeAnimation = CAKeyframeAnimation(keyPath: "position.x")
+        
+        shakeAnimation.values = [0, -15, 15, -15, 15, 0]
+        
+        shakeAnimation.keyTimes = [0, 0.2, 0.4, 0.6, 0.8, 1.0]
+        
+        shakeAnimation.duration = 0.4
+        
+        shakeAnimation.isAdditive = true
+        
+        self.layer.add(shakeAnimation, forKey: nil)
+    }
 }

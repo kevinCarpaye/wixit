@@ -60,7 +60,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         view.backgroundColor = UIColor.black
         self.setupNavigationBar()
         locationManager.delegate = self
-        locationManager.requestLocation()
+        locationManager.startUpdatingLocation()
         locationManager.requestAlwaysAuthorization()
 //        found(code: "5026555417006")
         captureSession = AVCaptureSession()
@@ -134,8 +134,8 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         if (captureSession?.isRunning == false) {
             captureSession.startRunning()
         }
-        self.tabBarController?.tabBar.isHidden = false
-        updateUser()
+        //self.tabBarController?.tabBar.isHidden = false
+        //updateUser()
 //        let dfn = (UIImage(named: "promo")?.withRenderingMode(.alwaysOriginal))!
 //        let picture = dfn.jpegData(compressionQuality: 1);
 //        CoreDataHelper().saveUser("Arthur", email: "arthur@gmail.com", image: picture)

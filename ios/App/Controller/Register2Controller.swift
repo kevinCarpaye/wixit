@@ -12,11 +12,10 @@ import SwiftyJSON
 
 class Register2Controller: UIViewController {
     
-    var div: UIView = {
-        let div = UIView()
-        div.translatesAutoresizingMaskIntoConstraints = false
-//        div.backgroundColor = UIColor.init(displayP3Red: 230/255, green: 230/255, blue: 230/255, alpha: 0.4)
-        return div
+    let registerView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     var profilPictureLabel: UILabel = {
@@ -31,13 +30,12 @@ class Register2Controller: UIViewController {
     
     var profilPicture: UIButton = {
         let picture = UIButton()
-        let image = UIImage(named: "userB")?.withRenderingMode(.alwaysOriginal)
+        let image = UIImage(named: "user")?.withRenderingMode(.alwaysOriginal)
         picture.setImage(image, for: .normal)
         picture.translatesAutoresizingMaskIntoConstraints = false
-        picture.contentMode = .scaleAspectFill
+        picture.contentMode = .scaleToFill
         picture.addTarget(self, action: #selector(picked), for: .touchUpInside)
         picture.clipsToBounds = true
-        picture.layer.cornerRadius = 90
         return picture
     }()
     
@@ -65,7 +63,6 @@ class Register2Controller: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("S'incrire", for: .normal)
-        button.backgroundColor = .blue
         button.clipsToBounds = true
         button.layer.cornerRadius = 15
         button.backgroundColor = UIColor(displayP3Red: 0, green: 182/255, blue: 1, alpha: 1)
@@ -82,7 +79,7 @@ class Register2Controller: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 216/255, green: 216/255, blue: 216/255, alpha: 1)
         self.navigationItem.title = "Incription"
         picker.delegate = self
         picker.allowsEditing = false
@@ -91,63 +88,71 @@ class Register2Controller: UIViewController {
     
     func SetupViews() {
         
-        SetupDiv()
-        SetupProfilLabel()
-        SetupProfilPicture()
-        SetupCityLabel()
-        SetupCity()
+        setupRegisterView()
         setupButton()
+        SetupCity()
+        SetupCityLabel()
+        SetupProfilPicture()
+        SetupProfilLabel()
+        
+        
         self.tabBarController?.tabBar.isHidden = true
     }
     
-    func SetupDiv() {
-        view.addSubview(div)
-        div.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        div.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        div.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        div.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
-        div.heightAnchor.constraint(equalToConstant: 420).isActive = true
+    func setupRegisterView () {
+        view.addSubview(registerView)
+        NSLayoutConstraint.activate([
+            registerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            registerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            registerView.widthAnchor.constraint(equalToConstant: 320),
+            registerView.heightAnchor.constraint(equalToConstant: 450)
+        ])
+        //registerView.transform = CGAffineTransform(scaleX: 0, y: 0)
+        registerView.backgroundColor = .white
     }
     
     func SetupProfilLabel() {
-        div.addSubview(profilPictureLabel)
-        profilPictureLabel.topAnchor.constraint(equalTo: div.topAnchor, constant: 10).isActive = true
-        profilPictureLabel.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        profilPictureLabel.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
-        profilPictureLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        registerView.addSubview(profilPictureLabel)
+        profilPictureLabel.bottomAnchor.constraint(equalTo: profilPicture.topAnchor, constant: -10).isActive = true
+        profilPictureLabel.leftAnchor.constraint(equalTo: registerView.leftAnchor, constant: 20).isActive = true
+        profilPictureLabel.rightAnchor.constraint(equalTo: registerView.rightAnchor, constant: -20).isActive = true
+        profilPictureLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
     
     func SetupProfilPicture() {
-        div.addSubview(profilPicture)
-        profilPicture.topAnchor.constraint(equalTo: profilPictureLabel.bottomAnchor, constant: 5).isActive = true
-        profilPicture.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        profilPicture.widthAnchor.constraint(equalToConstant: 180).isActive = true
-        profilPicture.heightAnchor.constraint(equalToConstant: 180).isActive = true
+        registerView.addSubview(profilPicture)
+        profilPicture.bottomAnchor.constraint(equalTo: cityLabel.topAnchor, constant: -20).isActive = true
+        profilPicture.centerXAnchor.constraint(equalTo: registerView.centerXAnchor).isActive = true
+        //profilPicture.leftAnchor.constraint(equalTo: cityLabel.leftAnchor, constant: 20).isActive = true
+        //profilPicture.rightAnchor.constraint(equalTo: cityLabel.rightAnchor, constant: -20).isActive = true
+        profilPicture.widthAnchor.constraint(equalToConstant: 110).isActive = true
+        profilPicture.heightAnchor.constraint(equalToConstant: 110).isActive = true
+        profilPicture.layer.cornerRadius = 55
         
     }
     
     func SetupCityLabel() {
-        div.addSubview(cityLabel)
-        cityLabel.topAnchor.constraint(equalTo: profilPicture.bottomAnchor, constant: 10).isActive = true
-        cityLabel.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        cityLabel.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
-        cityLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        registerView.addSubview(cityLabel)
+        cityLabel.bottomAnchor.constraint(equalTo: city.topAnchor, constant: -10).isActive = true
+        cityLabel.leftAnchor.constraint(equalTo: registerView.leftAnchor, constant: 20).isActive = true
+        cityLabel.rightAnchor.constraint(equalTo: registerView.rightAnchor, constant: -20).isActive = true
+        cityLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
     
     func SetupCity() {
-        div.addSubview(city)
-        city.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 5).isActive = true
-        city.leftAnchor.constraint(equalTo: div.leftAnchor, constant: 20).isActive = true
-        city.rightAnchor.constraint(equalTo: div.rightAnchor, constant: -20).isActive = true
-        city.bottomAnchor.constraint(equalTo: div.bottomAnchor, constant: -5).isActive = true
+        registerView.addSubview(city)
+        city.leftAnchor.constraint(equalTo: registerView.leftAnchor, constant: 20).isActive = true
+        city.rightAnchor.constraint(equalTo: registerView.rightAnchor, constant: -20).isActive = true
+        city.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -20).isActive = true
+        city.heightAnchor.constraint(equalToConstant: 120).isActive = true
         city.delegate = self
     }
     
     func setupButton() {
-        view.addSubview(button)
-        button.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        registerView.addSubview(button)
+        button.bottomAnchor.constraint(equalTo: registerView.bottomAnchor, constant: -50).isActive = true
+        button.leftAnchor.constraint(equalTo: registerView.leftAnchor, constant: 20).isActive = true
+        button.rightAnchor.constraint(equalTo: registerView.rightAnchor, constant: -20).isActive = true
         button.heightAnchor.constraint(equalToConstant: 40).isActive = true
     }
     
@@ -211,8 +216,16 @@ class Register2Controller: UIViewController {
                             //let image = self.profilPicture.imageView!.image!.jpegData(compressionQuality: 1);
                             let image =  self.profilPicture.imageView!.image!.pngData()
                             CoreDataHelper().savePicture(image)
-                            Alert().displayAlert(controller: self, title: "Compte crée", message: "Vous êtes dirigés vers la page de connxion")
-                            self.navigationController?.pushViewController(LoginController(), animated: true)
+                
+                            let alert = UIAlertController(title: "Compte crée", message: "Vous êtes dirigés vers la page de connxion", preferredStyle: .alert)
+                            
+                            let ok = UIAlertAction(title: "OK", style: .default) { (action) in
+                                self.navigationController?.pushViewController(LoginController(), animated: true)
+                            }
+                            
+                            alert.addAction(ok)
+                            
+                            self.present(alert, animated: true, completion: nil)
                         }
                         else {
                             Alert().displayAlert(controller: self, title: "Erreur", message: responseDecoded.result)

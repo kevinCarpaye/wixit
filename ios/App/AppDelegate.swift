@@ -14,8 +14,8 @@ import CoreLocation
 class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate {
 
     var window: UIWindow?
-    let locationManager = CLLocationManager()
-    var currentLocation: CLLocation? = nil
+//    let locationManager = CLLocationManager()
+//    var currentLocation: CLLocation? = nil
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -27,17 +27,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         window?.rootViewController = mainView
         window?.makeKeyAndVisible()
         
-        locationManager.requestAlwaysAuthorization()
-        locationManager.delegate = self
+//        locationManager.requestAlwaysAuthorization()
+//        locationManager.delegate = self
         return true
     }
         
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.first {
-            currentLocation = location
-            print("Found user's location: \(location.coordinate)")
-        }
-    }
+//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//        if let location = locations.first {
+//            currentLocation = location
+//            print("Found user's location: \(location.coordinate)")
+//        }
+//    }
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

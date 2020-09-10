@@ -109,7 +109,7 @@ class NewArticleViewCell: UICollectionViewCell {
         view.addSubview(name)
         NSLayoutConstraint.activate([
             name.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 5),
-            name.leftAnchor.constraint(equalTo: secondaryView.leftAnchor),
+            name.leftAnchor.constraint(equalTo: secondaryView.leftAnchor, constant: 5),
             name.rightAnchor.constraint(equalTo: secondaryView.rightAnchor),
             //name.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -500)
             //name.heightAnchor.constraint(equalToConstant: contentView.frame.height / 2)

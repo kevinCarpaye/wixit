@@ -17,6 +17,7 @@ class NameController: UIViewController, UITextFieldDelegate, CLLocationManagerDe
     var articles : [Articles] = []
     var user: [User] = []
     var distances: [Distance] = []
+    var isLogged : Bool = false
     
     var currentLocation: CLLocation? = nil
     var locationManager = CLLocationManager()
@@ -52,7 +53,7 @@ class NameController: UIViewController, UITextFieldDelegate, CLLocationManagerDe
         view.backgroundColor = .white
         setupViews()
         locationManager.delegate = self
-        locationManager.requestLocation()
+        locationManager.startUpdatingLocation()
         locationManager.requestAlwaysAuthorization()
         // Do any additional setup after loading the view.
     }
@@ -115,16 +116,24 @@ class NameController: UIViewController, UITextFieldDelegate, CLLocationManagerDe
     }
     
     @objc private func test() {
-        let im = UIImage(named: "user")?.withRenderingMode(.alwaysOriginal)
-        if (profilPicture.imageView?.image?.isEqual(im))! {
-            print("identique")
-            let AC = AuthController()
-            self.navigationController?.pushViewController(AC, animated: true)
-        }
-        else {
-            print("diiférent")
+//        let im = UIImage(named: "user")?.withRenderingMode(.alwaysOriginal)
+//        if (profilPicture.imageView?.image?.isEqual(im))! {
+//            print("identique")
+//            let AC = AuthController()
+//            self.navigationController?.pushViewController(AC, animated: true)
+//        }
+//        else {
+//            print("diiférent")
+//            let UIC = UserInfoController()
+//            self.navigationController?.pushViewController(UIC, animated: true)
+//        }
+        if self.isLogged == true {
             let UIC = UserInfoController()
             self.navigationController?.pushViewController(UIC, animated: true)
+        }
+        else {
+            let AC = AuthController()
+            self.navigationController?.pushViewController(AC, animated: true)
         }
     }
     

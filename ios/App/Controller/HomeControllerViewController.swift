@@ -12,9 +12,12 @@ import CoreLocation
 
 class HomeControllerViewController: UIViewController, CLLocationManagerDelegate {
     
+    var foundUserLocation: Bool = false
+    
     var articles : [Articles] = []
     var user: [User] = []
     var distances: [Distance] = []
+    var isLogged : Bool = false
     
     var currentLocation: CLLocation? = nil
     var locationManager = CLLocationManager()
@@ -74,15 +77,21 @@ class HomeControllerViewController: UIViewController, CLLocationManagerDelegate 
     
     override func viewWillAppear(_ animated: Bool) {
         updateUser()
-        fetchNewArticle()
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
         self.tabBarController?.tabBar.isHidden = false
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        self.navigationItem.title = "Accueil"
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
+        fetchNewArticle()
         setupViews()
         SetupRightNavButton()
+        locationManager.delegate = self
+        locationManager.startUpdatingLocation()
+        locationManager.requestAlwaysAuthorization()
         // Do any additional setup after loading the view.
     }
     
@@ -105,10 +114,10 @@ class HomeControllerViewController: UIViewController, CLLocationManagerDelegate 
     func setupText() {
         view.addSubview(text)
         NSLayoutConstraint.activate([
-            text.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            text.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             text.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
             text.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 10),
-            //text.heightAnchor.constraint(equalToConstant: 30)
+            text.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
     
@@ -119,7 +128,7 @@ class HomeControllerViewController: UIViewController, CLLocationManagerDelegate 
             collectionview.topAnchor.constraint(equalTo: text.bottomAnchor, constant: 10),
             collectionview.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
             collectionview.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10),
-            collectionview.heightAnchor.constraint(equalTo: collectionview.widthAnchor)
+            collectionview.heightAnchor.constraint(equalTo: collectionview.widthAnchor, multiplier: 0.9)
             //collectionview.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         collectionview.delegate = self
@@ -160,23 +169,32 @@ class HomeControllerViewController: UIViewController, CLLocationManagerDelegate 
     }
     
     @objc private func test() {
-           let im = UIImage(named: "user")?.withRenderingMode(.alwaysOriginal)
-           if (profilPicture.imageView?.image?.isEqual(im))! {
-               print("identique")
-               let AC = AuthController()
-               self.navigationController?.pushViewController(AC, animated: true)
-           }
-           else {
-               print("diiférent")
-               let UIC = UserInfoController()
-               self.navigationController?.pushViewController(UIC, animated: true)
-           }
+//           let im = UIImage(named: "user")?.withRenderingMode(.alwaysOriginal)
+//           if (profilPicture.imageView?.image?.isEqual(im))! {
+//               print("identique")
+//               let AC = AuthController()
+//               self.navigationController?.pushViewController(AC, animated: true)
+//           }
+//           else {
+//               print("diiférent")
+//               let UIC = UserInfoController()
+//               self.navigationController?.pushViewController(UIC, animated: true)
+//           }
+        if self.isLogged == true {
+            let UIC = UserInfoController()
+            self.navigationController?.pushViewController(UIC, animated: true)
+        }
+        else {
+            let AC = AuthController()
+            self.navigationController?.pushViewController(AC, animated: true)
+        }
        }
        
     private func updateUser() {
            CoreDataHelper().getUser { (user) in
                //print("Nombre d'utilisateur \(user?.count)")
                if user != nil && user!.count > 0 {
+                   self.isLogged = true
                    print("il y a toujours quelqu'un")
                    DispatchQueue.main.async {
                        self.user = user!
@@ -188,6 +206,7 @@ class HomeControllerViewController: UIViewController, CLLocationManagerDelegate 
                    }
                }
                else {
+                   self.isLogged = false
                    print("il n'y a personne")
                    DispatchQueue.main.async {
                        let picture = UIImage(named: "user")?.withRenderingMode(.alwaysOriginal)
@@ -247,6 +266,17 @@ class HomeControllerViewController: UIViewController, CLLocationManagerDelegate 
         // Pass the selected object to the new view controller.
     }
     */
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            currentLocation = location
+            print("Found user's location: \(location.coordinate)")
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Failed to find user's location: \(error.localizedDescription)")
+        Alert().displayAlert(controller: self, title: "Attention", message: "La géolocalisation est indispensable pour trouver les commerçants à proximité")
+    }
 
 }
 
@@ -287,18 +317,6 @@ extension HomeControllerViewController: UICollectionViewDelegateFlowLayout, UICo
         
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.first {
-            currentLocation = location
-            print("Found user's location: \(location.coordinate)")
-        }
-    }
-
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Failed to find user's location: \(error.localizedDescription)")
-        Alert().displayAlert(controller: self, title: "Attention", message: "La géolocalisation est indispensable pour trouver les commerçants à proximité")
-    }
-    
     private func Distance(latitude: Float, longitude: Float) -> Double {
         
         let userLocation = CLLocation(latitude: (self.currentLocation?.coordinate.latitude ?? 0.0), longitude: (self.currentLocation?.coordinate.longitude ?? 0.0))
@@ -308,7 +326,7 @@ extension HomeControllerViewController: UICollectionViewDelegateFlowLayout, UICo
         let distance = shopLocation.distance(from: userLocation)
         let distanceInKm = distance / 1000
         print("Ce magasin est à \(String(format: "%.2f", distance))m de distance")
-        print("Ce magasin est à \(String(format: "%.2f", distanceInKm))m de distance")
+        print("Ce magasin est à \(String(format: "%.2f", distanceInKm))km de distance")
         print("Le nombre de distances dans le tableau \(self.distances.count)")
         return distance
     }
