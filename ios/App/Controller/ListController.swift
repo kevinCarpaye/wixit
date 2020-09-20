@@ -15,6 +15,7 @@ class ListController: UIViewController {
     var total = 0.0
     
     let cellId = "cellid"
+    let helpCell = "helpCell"
     
     let profilPicture:UIButton = {
         let image = UIImage(named: "user")?.withRenderingMode(.alwaysOriginal)
@@ -66,12 +67,30 @@ class ListController: UIViewController {
         return view
     }()
     
+    lazy var noArticleView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    lazy var noArticleText : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize:18)
+        label.textColor = .black
+        label.textAlignment = .center
+        label.text = "Aucun article pour le moment "
+        label.numberOfLines = 2
+        return label
+    }()
+    
     override func viewWillAppear(_ animated: Bool) {
         SetupRightNavButton()
         updateArticles()
         updateUser()
         self.tabBarController?.tabBar.isHidden = false
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        self.navigationController?.isNavigationBarHidden = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.CalculPrice()
         }
         
@@ -82,11 +101,12 @@ class ListController: UIViewController {
         self.navigationItem.title = "Liste"
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
         view.backgroundColor = .white
+        SetupTotalDiv()
         tableview.delegate = self
         tableview.dataSource = self
         //sleep(1/2)
-        SetupViews()
         tableview.register(ListArticleViewCell.self, forCellReuseIdentifier: cellId)
+        tableview.register(HelpViewCell.self, forCellReuseIdentifier: helpCell)
     }
     
     private func updateUser() {
@@ -126,30 +146,38 @@ class ListController: UIViewController {
     
     private func updateArticles() {
         CoreDataHelper().getArticles { (articles) in
-            if articles != nil {
+            if articles != nil && articles!.count > 0{
                 DispatchQueue.main.async {
+                    self.tableview.alpha = 1
                     self.articles = articles!
                     self.tableview.reloadData()
                     print(self.articles.count)
+                    self.SetupTableview()
                     //print("\(self.articles[0].status) pour l'article à l'index 0")
                 }
             }
+            else {
+                self.setupNoArticleView()
+                self.setupNoArticleText()
+            }
+
         }
-    }
-    
-    private func SetupViews() {
-        SetupTotalDiv()
-        SetupTableview()
     }
     
     private func SetupTotalDiv() {
         view.addSubview(totalDiv)
         NSLayoutConstraint.activate([
-            totalDiv.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            totalDiv.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             totalDiv.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            totalDiv.widthAnchor.constraint(equalToConstant: 300),
+            totalDiv.widthAnchor.constraint(equalToConstant: 320),
             totalDiv.heightAnchor.constraint(equalToConstant: 120)
         ])
+        totalDiv.backgroundColor = .white
+        totalDiv.layer.borderWidth = CGFloat(3.0)
+        totalDiv.layer.cornerRadius = CGFloat(15.0)
+        totalDiv.layer.borderColor = UIColor(displayP3Red: 0, green: 182/255, blue: 1, alpha: 1).cgColor
+        
+        
         
         totalDiv.addSubview(totalImage)
         NSLayoutConstraint.activate([
@@ -182,6 +210,28 @@ class ListController: UIViewController {
             tableview.topAnchor.constraint(equalTo: totalDiv.bottomAnchor, constant: 20),
             tableview.widthAnchor.constraint(equalToConstant: view.frame.width),
             tableview.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        self.tableview.separatorStyle = .none
+    }
+    
+    private func setupNoArticleView() {
+        view.addSubview(noArticleView)
+        NSLayoutConstraint.activate([
+            noArticleView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            noArticleView.topAnchor.constraint(equalTo: totalDiv.bottomAnchor, constant: 30),
+            noArticleView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            noArticleView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.3)
+        ])
+    }
+    
+    private func setupNoArticleText() {
+        noArticleView.addSubview(noArticleText)
+        NSLayoutConstraint.activate([
+            noArticleText.topAnchor.constraint(equalTo: noArticleView.topAnchor),
+            noArticleText.leftAnchor.constraint(equalTo: noArticleView.leftAnchor),
+            noArticleText.rightAnchor.constraint(equalTo: noArticleView.rightAnchor),
+            noArticleText.bottomAnchor.constraint(equalTo: noArticleView.bottomAnchor)
+            
         ])
     }
     
@@ -238,47 +288,74 @@ class ListController: UIViewController {
 extension ListController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return articles.count
+        return articles.count + 1
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ListArticleViewCell
-        let item = articles[indexPath.item]
-        cell.articleName.text = item.name
-        cell.shopName.text = item.shop
-        cell.shopPrice.text = "\(item.price)€"
-        if ((item.image!.count) > 2) {
-            let start = item.image!.startIndex;
-            let end = item.image!.index((item.image!.startIndex), offsetBy: 7)
-            let range = start..<end
-            let text = item.image![range]
-            if ((text.elementsEqual("https:/"))) {
-                cell.articleImage.download(item.image!)
-            }
-            else {
-                cell.articleImage.download(Urls().BASE_URL_IMAGE + item.image!)
-            }
-        }
+        print("Le nombre d'articles \(articles.count)")
+        print("--------------------------------")
+        print(indexPath.row)
         
-         cell.selectionStyle = .none
-//        tableview.cellForRow(at: indexPath)?.backgroundColor = .green
+        if indexPath.row < articles.count {
+            
+            let item = articles[indexPath.item]
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ListArticleViewCell
+            cell.articleName.text = item.name
+            cell.shopName.text = item.shop
+            cell.shopPrice.text = "\(String(format: "%.2f", item.price))€"
+            if ((item.image!.count) > 2) {
+                let start = item.image!.startIndex;
+                let end = item.image!.index((item.image!.startIndex), offsetBy: 7)
+                let range = start..<end
+                let text = item.image![range]
+                if ((text.elementsEqual("https:/"))) {
+                    cell.articleImage.download(item.image!)
+                }
+                else {
+                    cell.articleImage.download(Urls().BASE_URL_IMAGE + item.image!)
+                }
+            }
+            return cell
+        }
+            print("--------------------------------")
+            print(indexPath.row)
+            print("entré dans le truc")
+            let cell = tableView.dequeueReusableCell(withIdentifier: helpCell, for: indexPath) as! HelpViewCell
+            cell.helpText.text =  "Glissez sur la gauche pour accéder aux options"
+            cell.selectionStyle = .none
+
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    
-        if articles[indexPath.item].status == false {
-            tableView.cellForRow(at: indexPath)?.backgroundColor = .white
-            print("C'est du false")
-        }
-        else {
-            tableView.cellForRow(at: indexPath)?.backgroundColor = .green
-            print("C'est du non false")
-        }
+         
+//        tableview.cellForRow(at: indexPath)?.backgroundColor = .green
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        //Initialisation
+        cell.alpha = 0
+        let transform = CATransform3DTranslate(CATransform3DIdentity, -250, 20, 0)
+        cell.layer.transform = transform
+        
+        //Animation
+        UIView.animate(withDuration: 1.0) {
+            cell.alpha = 1
+            cell.layer.transform = CATransform3DIdentity
+        }
+
+        if indexPath.item < articles.count && articles[indexPath.item].status == false {
+            //tableView.cellForRow(at: indexPath)?.layer.backgroundColor = UIColor.white.cgColor
+            cell.layer.backgroundColor = UIColor.white.cgColor
+            print("C'est du false")
+        }
+        else if indexPath.item < articles.count && articles[indexPath.item].status == true {
+            //tableView.cellForRow(at: indexPath)?.layer.backgroundColor = UIColor(red: 56/255, green: 181/255, blue: 2/255, alpha: 1).cgColor
+            cell.layer.backgroundColor = UIColor(red: 21/255, green: 184/255, blue: 25/255, alpha: 1).cgColor
+            print("C'est du non false")
+        }
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -293,7 +370,7 @@ extension ListController: UITableViewDelegate, UITableViewDataSource {
             if self.total == 0 {
                 self.totalPrice.text = "\(0.0)€"
             }
-            
+            tableView.alpha = 0
         }
 
         let share = UITableViewRowAction(style: .normal, title: "Panier") { (action, indexPath) in
@@ -302,7 +379,7 @@ extension ListController: UITableViewDelegate, UITableViewDataSource {
                 self.articles[indexPath.item].status = true
                 print("-------------------------------")
                 print(self.articles[indexPath.item].status)
-                self.tableview.cellForRow(at: indexPath)?.backgroundColor = .green
+                self.tableview.cellForRow(at: indexPath)?.layer.backgroundColor = UIColor(red: 21/255, green: 184/255, blue: 25/255, alpha: 1).cgColor
                 CoreDataHelper().UpdateArticleStatus(self.articles[indexPath.item], newValue: true)
             }
             else if self.articles[indexPath.item].status == true  {
@@ -322,10 +399,6 @@ extension ListController: UITableViewDelegate, UITableViewDataSource {
         }
 
         return [delete, share]
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("--------")
     }
     
 }

@@ -57,7 +57,7 @@ class HomeControllerViewController: UIViewController, CLLocationManagerDelegate 
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Scanner", for: .normal)
-        button.backgroundColor = UIColor(displayP3Red: 0, green: 182/255, blue: 1, alpha: 0.8)
+        button.backgroundColor = UIColor(displayP3Red: 0, green: 182/255, blue: 1, alpha: 1)
         button.clipsToBounds = true
         button.layer.cornerRadius = 22.5
         button.addTarget(self, action: #selector(Scan), for: .touchUpInside)
@@ -68,7 +68,7 @@ class HomeControllerViewController: UIViewController, CLLocationManagerDelegate 
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Recherche", for: .normal)
-        button.backgroundColor = UIColor(displayP3Red: 0, green: 182/255, blue: 1, alpha: 0.8)
+        button.backgroundColor = UIColor(displayP3Red: 0, green: 182/255, blue: 1, alpha: 1)
         button.clipsToBounds = true
         button.layer.cornerRadius = 22.5
         button.addTarget(self, action: #selector(Search), for: .touchUpInside)
@@ -79,6 +79,7 @@ class HomeControllerViewController: UIViewController, CLLocationManagerDelegate 
         updateUser()
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         self.tabBarController?.tabBar.isHidden = false
+        self.navigationItem.hidesBackButton = true  
     }
 
     override func viewDidLoad() {
@@ -249,6 +250,7 @@ class HomeControllerViewController: UIViewController, CLLocationManagerDelegate 
     }
     
     @objc private func Scan() {
+        Scanbutton.pulsate()
         self.navigationController?.pushViewController(ScanController(), animated: true)
     }
     

@@ -123,7 +123,7 @@ class UserInfoController: UIViewController {
         button.backgroundColor = .blue
         button.clipsToBounds = true
         button.layer.cornerRadius = 15
-        button.backgroundColor = UIColor(red: 25/255, green: 155/255, blue: 222/255, alpha: 0.5)
+        button.backgroundColor = UIColor(displayP3Red: 0, green: 182/255, blue: 1, alpha: 1)
         button.addTarget(self, action: #selector(GoToModifController), for: .touchUpInside)
         return button
     }()
@@ -463,7 +463,6 @@ class UserInfoController: UIViewController {
                 print(error)
             }
         }
-        
     }
     
     func ChangeDateFormat(date : String) {

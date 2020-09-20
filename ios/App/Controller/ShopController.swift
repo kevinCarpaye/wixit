@@ -29,7 +29,7 @@ class ShopController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         //let image = UIImage(named: "map")?.withRenderingMode(.alwaysOriginal)
         //button.setImage(image, for: .normal)
         button.contentMode = .scaleAspectFit
-        button.backgroundColor = UIColor(red: 25/255, green: 155/255, blue: 222/255, alpha: 0.5)
+        button.backgroundColor = UIColor(red: 25/255, green: 155/255, blue: 222/255, alpha: 1)
         button.clipsToBounds = true
         button.layer.cornerRadius = 30
         button.addTarget(self, action: #selector(goToListShopController), for: .touchUpInside)
@@ -66,7 +66,7 @@ class ShopController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     override func viewWillAppear(_ animated: Bool) {
         updateUser()
         RequestAll()
-        self.tabBarController?.tabBar.isHidden = false
+        self.tabBarController?.tabBar.isHidden = true
         //setupShop()
     }
 
@@ -77,6 +77,7 @@ class ShopController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         view.backgroundColor = .white
         SetupNavigationBar()
         //SetupSearchBar()
+        setupLeftNavButton()
         
         SetupMapView()
         SetupSearchBar()
@@ -97,9 +98,24 @@ class ShopController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         
     }
     
+    
     private func SetupNavigationBar() {
         navigationItem.title = "Carte"
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
+    }
+    
+    func setupLeftNavButton() {
+        let image = UIImage(named: "back")?.withRenderingMode(.alwaysOriginal)
+        let button = UIButton(type: .system)
+        button.setImage(image, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        //imageView.clipsToBounds = true
+        //imageView.layer.cornerRadius = (imageView.frame.size.width / 2)
+        //profilPicture.setBackgroundImage(profilPicture.imageView?.image, for: .normal)
+        button.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        button.addTarget(self, action: #selector(self.back), for: .touchUpInside)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
     }
     
     private func SetupMapView() {
@@ -200,6 +216,10 @@ class ShopController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                 self.navigationController?.pushViewController(AC, animated: true)
             }
         }
+    
+    @objc func back() {
+        self.navigationController?.popViewController(animated: true)
+    }
     
 //    func SetupSearchBar() {
 //        let search = UISearchController(searchResultsController: nil)

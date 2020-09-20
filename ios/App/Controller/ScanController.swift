@@ -59,6 +59,7 @@ class ScanController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, 
         
         view.backgroundColor = UIColor.black
         self.setupNavigationBar()
+        
         locationManager.delegate = self
         locationManager.startUpdatingLocation()
         locationManager.requestAlwaysAuthorization()

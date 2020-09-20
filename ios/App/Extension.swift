@@ -49,3 +49,34 @@ extension UITextField {
         self.layer.add(shakeAnimation, forKey: nil)
     }
 }
+
+extension UIButton {
+    
+    func pulsate() {
+        
+        let pulse = CASpringAnimation(keyPath: "transform.scale")
+        pulse.duration = 1
+        pulse.fromValue = 0.95
+        pulse.toValue = 1
+        //pulse.autoreverses = true
+        pulse.repeatCount = 1
+        pulse.initialVelocity = 0.5
+        pulse.damping = 1
+        
+        layer.add(pulse, forKey: nil)
+    }
+}
+
+extension UITableViewCell {
+    
+    func flash() {
+        
+        let flash = CASpringAnimation(keyPath: "opacity")
+        flash.duration = 1
+        flash.fromValue = 1
+        flash.toValue = 0.5
+        flash.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        
+        layer.add(flash, forKey: nil)
+    }
+}

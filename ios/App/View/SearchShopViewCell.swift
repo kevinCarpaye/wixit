@@ -31,6 +31,7 @@ class SeachShopHeaderCell: UICollectionViewCell {
             label.font = UIFont.systemFont(ofSize: 18)
             label.textAlignment = .center
             label.textColor = .black
+            label.numberOfLines = 2
             return label
        }()
     
@@ -79,10 +80,12 @@ class SeachShopHeaderCell: UICollectionViewCell {
     func SetupArticleName() {
         addSubview(articleName)
         NSLayoutConstraint.activate([
+            articleName.leftAnchor.constraint(equalTo: divArticle.leftAnchor, constant: 10),
+            articleName.rightAnchor.constraint(equalTo: divArticle.rightAnchor, constant: 10),
             articleName.bottomAnchor.constraint(equalTo: divArticle.bottomAnchor, constant: -10),
-            articleName.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            articleName.widthAnchor.constraint(equalToConstant: 280),
-            articleName.heightAnchor.constraint(equalToConstant: 30)
+//            articleName.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+//            articleName.widthAnchor.constraint(equalToConstant: 280),
+//            articleName.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
     
@@ -92,8 +95,8 @@ class SeachShopHeaderCell: UICollectionViewCell {
             articleImage.topAnchor.constraint(equalTo: divArticle.topAnchor, constant: 20),
             articleImage.bottomAnchor.constraint(equalTo: articleName.topAnchor, constant: -10),
             articleImage.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            articleImage.widthAnchor.constraint(equalToConstant: 225),
-            articleImage.heightAnchor.constraint(equalToConstant: 180)
+            articleImage.widthAnchor.constraint(equalToConstant: 195),
+            articleImage.heightAnchor.constraint(equalToConstant: 160)
         ])
     }
     
@@ -110,18 +113,18 @@ class SearchShopViewCell: UICollectionViewCell {
             worldLabel.text = shop?.name
             adressLabel.text = shop?.adress
 
-            priceArticle.text = "\(shop?.price_base ?? 0)€"
+            priceArticle.text = "\(String(format: "%.2f", shop?.price_base ?? 0))€"
             
             if (shop?.price)! > 0.0 {
                if self.setDateEnd() > self.setCurrentDate() {
                     articleSale.image = UIImage(named: "promo")
                     self.ChangeDateStartFormat(date: (shop?.date_start)!)
                     self.ChangeDateEndFormat(date: (shop?.date_end)!)
-                let attributedString = NSMutableAttributedString(string: "\(shop?.price_base ?? 0)€")
+                let attributedString = NSMutableAttributedString(string: "\(String(format: "%.2f", shop?.price_base ?? 0))€" )
                     attributedString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: NSNumber(value: NSUnderlineStyle.single.rawValue), range: NSMakeRange(0, attributedString.length))
                     attributedString.addAttribute(NSAttributedString.Key.strikethroughColor, value: UIColor.red, range: NSMakeRange(0, attributedString.length))
                 self.priceArticle.attributedText = attributedString
-                self.priceSaleArticle.text = "/ \((shop?.price)!)€"
+                self.priceSaleArticle.text = "/ \(String(format: "%.2f", shop?.price ?? 0))€"
                 print("-----------------------------------")
                 print(attributedString)
                 }
@@ -192,6 +195,8 @@ class SearchShopViewCell: UICollectionViewCell {
         label.textAlignment = .center
         label.textColor = .black
         label.backgroundColor = UIColor(red: 187/255, green: 187/255, blue: 187/255, alpha: 0.7)
+        label.clipsToBounds = true
+        label.layer.cornerRadius =  10
         return label
     }()
     

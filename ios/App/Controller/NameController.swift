@@ -62,10 +62,12 @@ class NameController: UIViewController, UITextFieldDelegate, CLLocationManagerDe
         updateUser()
         SetupRightNavButton()
         self.tabBarController?.tabBar.isHidden = true
+        //self.navigationController?.setToolbarHidden(false, animated: true)
     }
     
     private func setupViews() {
         SetupNavigationBar()
+        setupLeftNavButton()
         SetupSearchBar()
         SetupTableView()
         searchBar.delegate = self
@@ -104,6 +106,20 @@ class NameController: UIViewController, UITextFieldDelegate, CLLocationManagerDe
         
     }
     
+    func setupLeftNavButton() {
+        let image = UIImage(named: "back")?.withRenderingMode(.alwaysOriginal)
+        let button = UIButton(type: .system)
+        button.setImage(image, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        //imageView.clipsToBounds = true
+        //imageView.layer.cornerRadius = (imageView.frame.size.width / 2)
+        //profilPicture.setBackgroundImage(profilPicture.imageView?.image, for: .normal)
+        button.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        button.addTarget(self, action: #selector(self.back), for: .touchUpInside)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
+    }
+    
     private func SetupRightNavButton() {
         profilPicture.translatesAutoresizingMaskIntoConstraints = false
         profilPicture.clipsToBounds = true
@@ -113,6 +129,10 @@ class NameController: UIViewController, UITextFieldDelegate, CLLocationManagerDe
         profilPicture.heightAnchor.constraint(equalToConstant: 40).isActive = true
         profilPicture.addTarget(self, action: #selector(self.test), for: .touchUpInside)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: profilPicture)
+    }
+    
+    @objc func back() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     @objc private func test() {
@@ -274,6 +294,7 @@ extension NameController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! NameArticleViewCell
         let article = articles[indexPath.item]
+        //cell.backgroundColor = .red
         cell.articleName.text = article.name
         print(article.image.count)
         if (article.image.count > 7) {
@@ -298,10 +319,28 @@ extension NameController: UITableViewDelegate, UITableViewDataSource {
         return 100
     }
     
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        return 100
+//    }
+//
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(articles[indexPath.row].image)
         print(articles[indexPath.row].name)
         shopsFetch(name: articles[indexPath.row].name)
+        
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        //Initialisation
+        cell.alpha = 0
+        let transform = CATransform3DTranslate(CATransform3DIdentity, -250, 20, 0)
+        cell.layer.transform = transform
+        
+        //Animation
+        UIView.animate(withDuration: 1.0) {
+            cell.alpha = 1
+            cell.layer.transform = CATransform3DIdentity
+        }
     }
     
     private func Distance(latitude: Float, longitude: Float) -> Double {

@@ -173,11 +173,14 @@ class ShopDetailController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.tabBarController?.tabBar.isHidden = false
+        self.tabBarController?.tabBar.isHidden = true
+        self.navigationController?.isNavigationBarHidden = false
+        //self.navigationController?.setToolbarHidden(false, animated: true)
     }
     
     private func SetupViews() {
         SetupNavigationBar()
+        setupLeftNavButton()
         SetupImageView()
         SetupTableView()
         SetupNameCell()
@@ -191,6 +194,24 @@ class ShopDetailController: UIViewController {
     private func SetupNavigationBar() {
         self.navigationItem.title = "Détails"
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
+    }
+    
+    func setupLeftNavButton() {
+        let image = UIImage(named: "back")?.withRenderingMode(.alwaysOriginal)
+        let button = UIButton(type: .system)
+        button.setImage(image, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        //imageView.clipsToBounds = true
+        //imageView.layer.cornerRadius = (imageView.frame.size.width / 2)
+        //profilPicture.setBackgroundImage(profilPicture.imageView?.image, for: .normal)
+        button.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        button.addTarget(self, action: #selector(self.back), for: .touchUpInside)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
+    }
+    
+    @objc func back() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     private func SetupImageView() {
@@ -295,7 +316,8 @@ class ShopDetailController: UIViewController {
                 //informationsImage.centerYAnchor.constraint(equalTo: informationsCell.centerYAnchor),
                 informationsImage.leftAnchor.constraint(equalTo: informationsCell.leftAnchor, constant: 15),
                 informationsImage.widthAnchor.constraint(equalToConstant: 30),
-                informationsImage.heightAnchor.constraint(equalToConstant: 30)
+                informationsImage.heightAnchor.constraint(equalToConstant: 30),
+                informationsCell.heightAnchor.constraint(equalToConstant: 30)
             ])
         }
         

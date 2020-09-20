@@ -91,7 +91,7 @@ class LoginController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        view.backgroundColor = UIColor(red: 216/255, green: 216/255, blue: 216/255, alpha: 1)
+        view.backgroundColor = .white//UIColor(red: 216/255, green: 216/255, blue: 216/255, alpha: 1)
         self.navigationItem.title = "Se connecter"
         setupCrossView()
         setupCrossIcon()
@@ -134,7 +134,8 @@ class LoginController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        //self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.navigationController?.isNavigationBarHidden = true
     }
     
     func setupCrossView() {

@@ -100,6 +100,10 @@ class Register2Controller: UIViewController {
         SetupViews()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.isNavigationBarHidden = true
+    }
+    
     func SetupViews() {
         
         setupCrossView()
@@ -221,7 +225,7 @@ class Register2Controller: UIViewController {
     
     func RequestWithProfilPicture() {
         let url = Urls().BASE_URL + "registerWithProfilPicture/"
-        let parameters = ["username": self.name, "email": self.email, "password": self.password, "Cpassword": self.Cpassword, "city": self.dataSelected]
+        let parameters = ["userName": self.name, "email": self.email, "password": self.password, "Cpassword": self.Cpassword, "city": self.dataSelected]
         print(self.name + " " + self.email + " " + self.password + " " + self.dataSelected)
         
         AF.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default)

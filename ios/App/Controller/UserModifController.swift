@@ -30,7 +30,7 @@ class UserModifController: UIViewController {
     var div: UIView = {
         let div = UIView()
         div.translatesAutoresizingMaskIntoConstraints = false
-        div.backgroundColor = UIColor(displayP3Red: 240/255, green: 240/255, blue: 240/255, alpha: 0.6)
+        div.backgroundColor = .white//UIColor(displayP3Red: 240/255, green: 240/255, blue: 240/255, alpha: 0.6)
         return div
     }()
     
@@ -49,7 +49,7 @@ class UserModifController: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Modifier la photo de profil", for: .normal)
-        button.setTitleColor(.blue, for: .normal)
+        button.setTitleColor(UIColor(displayP3Red: 0, green: 182/255, blue: 1, alpha: 1), for: .normal)
         button.addTarget(self, action: #selector(Picked), for: .touchUpInside)
         return button
     }()
@@ -66,9 +66,10 @@ class UserModifController: UIViewController {
     var nameTextFiel: UITextField = {
         let text = UITextField()
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.layer.borderWidth = 2
+        text.layer.borderWidth = 1
         text.layer.borderColor = UIColor.black.cgColor
         text.textColor = .black
+        text.layer.cornerRadius = 5
         return text
     }()
     
@@ -84,9 +85,10 @@ class UserModifController: UIViewController {
     var emailTextfield: UITextField = {
         let text = UITextField()
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.layer.borderWidth = 2
+        text.layer.borderWidth = 1
         text.layer.borderColor = UIColor.black.cgColor
         text.textColor = .black
+        text.layer.cornerRadius = 5
         return text
     }()
     
@@ -112,7 +114,7 @@ class UserModifController: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Modifier le mot de passe", for: .normal)
-        button.setTitleColor(.blue, for: .normal)
+        button.setTitleColor(UIColor(displayP3Red: 0, green: 182/255, blue: 1, alpha: 1), for: .normal)
         button.addTarget(self, action: #selector(ChangePassword), for: .touchUpInside)
         return button
     }()
@@ -346,6 +348,12 @@ class UserModifController: UIViewController {
 
         if userName == nameTextFiel.text && email == emailTextfield.text && dataSelected == searchCity {
             //let im = UIImage(named: "user")?.withRenderingMode(.alwaysOriginal)
+            if nameTextFiel.text!.count < 3 {
+                nameTextFiel.layer.borderColor = UIColor.red.cgColor
+                nameTextFiel.shake()
+                return
+            }
+            
             guard let imageData = self.user[0].picture else { return  }
             let picture = UIImage(data: imageData)?.withRenderingMode(.alwaysOriginal)
             if (profilPicture.imageView?.image?.isEqual(picture))! {
@@ -355,9 +363,42 @@ class UserModifController: UIViewController {
                 //self.navigationController?.pushViewController(AC, animated: true)
             }
         }
+        let validation = isValidEmailAddress(emailAddressString:emailTextfield.text!)
+        
+        guard validation == true else {
+            emailTextfield.shake()
+            //messageLabel.text = "L'email est incorrect"
+            return
+        }
+        
         Request()
         //print("\(nameTextFiel.text) \(emailTextfield.text) \(dataSelected)")
     }
+    
+    func isValidEmailAddress(emailAddressString: String) -> Bool {
+        
+        var returnValue = true
+        let emailRegEx = "[A-Z0-9a-z.-_]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,3}"
+        
+        do {
+            let regex = try NSRegularExpression(pattern: emailRegEx)
+            let nsString = emailAddressString as NSString
+            let results = regex.matches(in: emailAddressString, range: NSRange(location: 0, length: nsString.length))
+            
+            if results.count == 0
+            {
+                returnValue = false
+            }
+            
+        } catch let error as NSError {
+            print("invalid regex: \(error.localizedDescription)")
+            returnValue = false
+        }
+        
+        return  returnValue
+    }
+    
+    
     
     func Request() {
         let url = Urls().BASE_URL + "/updateUserProfil"
@@ -415,6 +456,11 @@ extension UserModifController: UITextFieldDelegate, UIImagePickerControllerDeleg
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         dataSelected = pickerData[row]
         print(dataSelected)
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        nameTextFiel.layer.borderColor = UIColor.black.cgColor
+        emailTextfield.layer.borderColor = UIColor.black.cgColor
     }
     
 //    override var preferredStatusBarStyle: UIStatusBarStyle {

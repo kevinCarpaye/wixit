@@ -10,6 +10,12 @@ import UIKit
 
 class ListShopViewCell: UITableViewCell {
     
+    var shopView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     var shopImage: UIImageView = {
         let image = UIImage(named: "")?.withRenderingMode(.alwaysOriginal)
         let view = UIImageView(image: image)
@@ -60,24 +66,41 @@ class ListShopViewCell: UITableViewCell {
     }
     
     func SetupViews() {
+        setupShopView()
         SetupShopImage()
         SetupDistance()
         SetupShopName()
         SetupShopAdress()
     }
+    
+    func setupShopView() {
+        addSubview(shopView)
+        NSLayoutConstraint.activate([
+            shopView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
+            shopView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 10),
+            shopView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10),
+            shopView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10)
+        ])
+        shopView.backgroundColor = .white
+        shopView.layer.cornerRadius = 10
+        shopView.layer.shadowOpacity = 0.3
+        shopView.layer.shadowOffset = CGSize(width: 3, height: 3)
+        shopView.layer.contentsGravity = CALayerContentsGravity.center
+        
+    }
 
      func SetupShopImage() {
-            addSubview(shopImage)
+        shopView.addSubview(shopImage)
             NSLayoutConstraint.activate([
-                shopImage.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-                shopImage.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 10),
+                shopImage.centerYAnchor.constraint(equalTo: shopView.centerYAnchor),
+                shopImage.leftAnchor.constraint(equalTo: shopView.leftAnchor, constant: 10),
                 shopImage.widthAnchor.constraint(equalToConstant: 100),
                 shopImage.heightAnchor.constraint(equalToConstant: 100),
             ])
         }
         
         func SetupDistance() {
-            addSubview(distance)
+            shopView.addSubview(distance)
             NSLayoutConstraint.activate([
                 distance.bottomAnchor.constraint(equalTo: shopImage.bottomAnchor, constant: -15),
                 distance.leftAnchor.constraint(equalTo: shopImage.leftAnchor, constant: 5),
@@ -87,21 +110,21 @@ class ListShopViewCell: UITableViewCell {
         }
         
         func SetupShopName() {
-            addSubview(shopName)
+            shopView.addSubview(shopName)
             NSLayoutConstraint.activate([
-                shopName.topAnchor.constraint(equalTo: self.topAnchor, constant: 25),
+                shopName.topAnchor.constraint(equalTo: shopView.topAnchor, constant: 15),
                 shopName.leftAnchor.constraint(equalTo: shopImage.rightAnchor, constant: 5),
-                shopName.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -5),
+                shopName.rightAnchor.constraint(equalTo: shopView.rightAnchor, constant: -5),
                 //shopName.heightAnchor.constraint(equalToConstant: 30)
             ])
         }
         
         func SetupShopAdress() {
-            addSubview(shopAdress)
+            shopView.addSubview(shopAdress)
             NSLayoutConstraint.activate([
-                shopAdress.topAnchor.constraint(equalTo: shopName.topAnchor, constant: 20),
+                shopAdress.topAnchor.constraint(equalTo: shopName.bottomAnchor, constant: 5),
                 shopAdress.leftAnchor.constraint(equalTo: shopImage.rightAnchor, constant: 10),
-                shopAdress.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10),
+                shopAdress.rightAnchor.constraint(equalTo: shopView.rightAnchor, constant: -10),
                 //shopAdress.heightAnchor.constraint(equalToConstant: 60)
             ])
         }

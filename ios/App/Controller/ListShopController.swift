@@ -75,6 +75,7 @@ class ListShopController: UIViewController, UITextFieldDelegate, CLLocationManag
         updateUser()
         RequestAll()
         self.tabBarController?.tabBar.isHidden = false
+        self.navigationController?.isNavigationBarHidden = false
     }
 
     override func viewDidLoad() {
@@ -408,6 +409,19 @@ extension ListShopController: UITableViewDelegate, UITableViewDataSource {
         sdc.latitude = shop[indexPath.item].latitude!
         sdc.longitude = shop[indexPath.item].longitude!
         self.navigationController?.pushViewController(sdc, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        //Initialisation
+        cell.alpha = 0
+        let transform = CATransform3DTranslate(CATransform3DIdentity, -250, 20, 0)
+        cell.layer.transform = transform
+        
+        //Animation
+        UIView.animate(withDuration: 1.0) {
+            cell.alpha = 1
+            cell.layer.transform = CATransform3DIdentity
+        }
     }
     
 //    override var preferredStatusBarStyle: UIStatusBarStyle {

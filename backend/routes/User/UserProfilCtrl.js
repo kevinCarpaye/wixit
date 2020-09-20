@@ -150,7 +150,7 @@ module.exports = {
             });
         }
 
-        db.query('UPDATE users set userName = "'+ userName +'", email = "'+ email +'", city = "'+ city +'" WHERE email = "'+ old +'"', function(err, response, fields) {
+        db.query('UPDATE users set userName = "'+ userName +'", email = "'+ email +'", city = "'+ city +'", updatedAt = now() WHERE email = "'+ old +'"', function(err, response, fields) {
             if (err) throw err;
             if (response.affectedRows > 0) {
                 return res.status(201).json({

@@ -48,7 +48,7 @@ class SearchArticleController: UICollectionViewController, UICollectionViewDeleg
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 16)
-        label.text = "Aucun commerce n'est répertorié pour le moment. Nous sommes actuellement à leur recherche."
+        label.text = "Aucun commerce n'est répertorié pour le moment. Le référencement est en cours."
         label.numberOfLines = 3
         return label
     }()
